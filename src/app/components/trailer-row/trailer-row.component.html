@@ -1,0 +1,13 @@
+<div class="trailer-row">
+  <div class="trailer-scroll-container">
+    <ng-container *ngFor="let item of trailerData">
+      <app-trailer-card
+        *ngFor="let trailer of item.trailers"
+        [media]="item.media"
+        [trailer]="trailer"
+        (trailerClick)="onTrailerClick($event)"
+      >
+      </app-trailer-card>
+    </ng-container>
+  </div>
+</div>

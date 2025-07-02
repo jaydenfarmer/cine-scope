@@ -1,0 +1,57 @@
+<div class="page-layout">
+  <div class="sidebar">
+    <div class="search-sidebar">
+      <div class="sidebar-title">Search Results</div>
+      <button
+        class="sidebar-option"
+        [class.selected]="selectedCategory === 'movies'"
+        (click)="setCategory('movies')"
+      >
+        Movies <span class="count">{{ totalMovieResults }}</span>
+      </button>
+      <button
+        class="sidebar-option"
+        [class.selected]="selectedCategory === 'tv'"
+        (click)="setCategory('tv')"
+      >
+        TV Shows <span class="count">{{ totalTvResults }}</span>
+      </button>
+      <button
+        class="sidebar-option"
+        [class.selected]="selectedCategory === 'people'"
+        (click)="setCategory('people')"
+      >
+        People <span class="count">{{ totalPeopleResults }}</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="main-content">
+    <ng-container [ngSwitch]="selectedCategory">
+      <div *ngSwitchCase="'movies'">
+        <h2 class="search-title">Movies</h2>
+        <div class="media-grid">
+          <app-media-card *ngFor="let movie of searchMovies" [media]="movie">
+          </app-media-card>
+        </div>
+      </div>
+      <div *ngSwitchCase="'tv'">
+        <h2 class="search-title">TV Shows</h2>
+        <div class="media-grid">
+          <app-media-card *ngFor="let show of searchTvShows" [media]="show">
+          </app-media-card>
+        </div>
+      </div>
+      <div *ngSwitchCase="'people'">
+        <h2 class="search-title">People</h2>
+        <div class="people-grid">
+          <app-people-card
+            *ngFor="let person of searchPeople"
+            [person]="person"
+          >
+          </app-people-card>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+</div>

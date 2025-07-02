@@ -1,0 +1,51 @@
+<div *ngIf="person$ | async as person" class="person-details-root">
+  <div class="person-details-left">
+    <img
+      class="person-details-photo"
+      [src]="
+        person.profile_path
+          ? 'https://image.tmdb.org/t/p/w500' + person.profile_path
+          : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+      "
+      [alt]="person.name"
+      [class.no-image-person]="!person.profile_path"
+    />
+    <div class="person-details-meta">
+      <div *ngIf="person.birthday">Born: {{ person.birthday | date }}</div>
+      <div *ngIf="person.place_of_birth">
+        Place of Birth: {{ person.place_of_birth }}
+      </div>
+      <div *ngIf="person.known_for_department">
+        Known for: {{ person.known_for_department }}
+      </div>
+    </div>
+  </div>
+  <div class="person-details-info">
+    <h1>{{ person.name }}</h1>
+    <h2>Biography</h2>
+    <ng-container *ngIf="getBiographyParagraphs(person).length; else noBio">
+      <p>
+        {{ getBiographyParagraphs(person)[0] }}
+        <button
+          *ngIf="!bioExpanded && getBiographyParagraphs(person).length > 1"
+          class="bio-inline-btn"
+          (click)="toggleBio()"
+          aria-label="Show full biography"
+        >
+          Show More
+        </button>
+      </p>
+      <ng-container *ngIf="bioExpanded">
+        <p *ngFor="let para of getBiographyParagraphs(person).slice(1)">
+          {{ para }}
+        </p>
+      </ng-container>
+    </ng-container>
+    <ng-template #noBio><em>No biography available.</em></ng-template>
+    <h2>Known For</h2>
+    <app-known-for-row
+      *ngIf="knownFor$ | async as knownFor"
+      [items]="knownFor"
+    ></app-known-for-row>
+  </div>
+</div>

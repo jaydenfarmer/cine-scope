@@ -1,0 +1,37 @@
+<div class="search-card">
+  <div class="media-image">
+    <img [src]="getImageUrl()" [alt]="getTitle()" loading="lazy" />
+  </div>
+  <div class="media-content">
+    <div class="media-header">
+      <h3 class="media-title">{{ getTitle() }}</h3>
+      <div
+        *ngIf="media.vote_average && mediaType !== 'person'"
+        class="rating-badge"
+        [ngClass]="{
+          'rating-green': media.vote_average >= 7,
+          'rating-yellow': media.vote_average >= 5 && media.vote_average < 7,
+          'rating-red': media.vote_average < 5
+        }"
+      >
+        {{ (media.vote_average * 10).toFixed(0) }}%
+      </div>
+    </div>
+    <div class="media-info">
+      <p class="media-date" *ngIf="getDate()">
+        {{ getDate() | date : "MMM d, y" }}
+      </p>
+      <p class="media-overview" *ngIf="media.overview">{{ media.overview }}</p>
+      <p
+        class="known-for"
+        *ngIf="
+          mediaType === 'person' &&
+          media.known_for &&
+          media.known_for.length > 0
+        "
+      >
+        Known for: {{ getKnownForText() }}
+      </p>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div class="trailer-card">
+  <div class="trailer-thumbnail" (click)="onTrailerClick()">
+    <img
+      [src]="getThumbnailUrl(trailer.key)"
+      [alt]="trailer.name"
+      class="thumbnail-image"
+      (error)="onImageError($event)"
+      [class.hidden]="showFallback"
+    />
+    <div class="fallback-image" [class.visible]="showFallback">
+      <div class="fallback-content">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"
+          />
+        </svg>
+        <span>No Trailer Image</span>
+      </div>
+    </div>
+    <div class="play-overlay">
+      <div class="play-button">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M8 5v14l11-7z" />
+        </svg>
+      </div>
+    </div>
+  </div>
+  <div class="trailer-info" (click)="onMediaClick()">
+    <p class="trailer-title" [title]="media.title || media.name">
+      {{ media.title || media.name }}
+    </p>
+    <h3 class="media-title" [title]="trailer.name">{{ trailer.name }}</h3>
+  </div>
+</div>

@@ -1,0 +1,90 @@
+<nav class="navbar" [class.menu-open]="menuOpen">
+  <div class="navbar-inner">
+    <button (click)="goHome()" class="logo-btn">
+      <img src="/MovieMatchLogo.png" alt="Movie Match Logo" class="logo-img" />
+    </button>
+
+    <button
+      class="hamburger"
+      (click)="menuOpen = !menuOpen"
+      aria-label="Open menu"
+    >
+      &#9776;
+    </button>
+
+    <div class="nav-links" [class.open]="menuOpen">
+      <div class="nav-dropdown">
+        <span class="nav-link">Movies</span>
+        <div class="dropdown-menu">
+          <button (click)="navigateTo('movies/popular')">Popular</button>
+          <button (click)="navigateTo('movies/top-rated')">Top Rated</button>
+          <button (click)="navigateTo('movies/upcoming')">Upcoming</button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <span class="nav-link">TV Shows</span>
+        <div class="dropdown-menu">
+          <button (click)="navigateTo('tv/popular')">Popular</button>
+          <button (click)="navigateTo('tv/top-rated')">Top Rated</button>
+          <button (click)="navigateTo('tv/airing-today')">Airing Today</button>
+        </div>
+      </div>
+
+      <div class="nav-dropdown">
+        <span class="nav-link">People</span>
+        <div class="dropdown-menu">
+          <button (click)="navigateTo('people/popular')">Popular People</button>
+        </div>
+      </div>
+
+      <div class="theme-switch" (click)="themeService.toggleTheme()">
+        <img
+          src="/sun-icon.png"
+          alt="Light mode"
+          class="switch-icon"
+          [class.active]="!themeService.isDarkMode()"
+        />
+        <span
+          class="switch-slider"
+          [class.right]="themeService.isDarkMode()"
+        ></span>
+        <img
+          src="/moon-icon.png"
+          alt="Dark mode"
+          class="switch-icon"
+          [class.active]="themeService.isDarkMode()"
+        />
+      </div>
+    </div>
+
+    <div class="spacer"></div>
+
+    <form
+      class="search-bar"
+      (submit)="onSubmit($event)"
+      [class.expanded]="searchExpanded"
+    >
+      <input
+        type="text"
+        [(ngModel)]="query"
+        name="query"
+        placeholder="Search movies..."
+        autocomplete="off"
+        [class.hide-on-collapsed]="!searchExpanded"
+      />
+      <button
+        type="button"
+        class="search-toggle"
+        *ngIf="!searchExpanded"
+        (click)="expandSearch($event)"
+        aria-label="Expand search"
+      >
+        <img src="/search-icon.png" alt="Search" class="search-icon" />
+      </button>
+      <button type="submit" *ngIf="searchExpanded">
+        <img src="/search-icon.png" alt="Search" class="search-icon" />
+      </button>
+    </form>
+  </div>
+</nav>

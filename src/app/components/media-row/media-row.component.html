@@ -1,0 +1,11 @@
+<div class="row-container">
+  <h2 *ngIf="title">{{ title }}</h2>
+  <div class="media-row">
+    <app-home-card
+      *ngFor="let item of items"
+      [media]="item"
+      [mediaType]="mediaType"
+    >
+    </app-home-card>
+  </div>
+</div>

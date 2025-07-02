@@ -1,0 +1,29 @@
+<a [routerLink]="['/person', person.id]" class="people-card-link">
+  <div class="people-card" [class.no-image]="!person.profile_path">
+    <div class="person-image">
+      <img
+        *ngIf="person.profile_path"
+        [src]="'https://image.tmdb.org/t/p/w342' + person.profile_path"
+        [alt]="person.name"
+        loading="lazy"
+      />
+      <div *ngIf="!person.profile_path" class="no-image-placeholder">
+        <svg class="person-icon" viewBox="0 0 24 24" fill="currentColor">
+          <path
+            d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"
+          />
+        </svg>
+        <span class="no-image-text">No Image</span>
+      </div>
+    </div>
+    <div class="person-info">
+      <h3 class="person-name">{{ person.name }}</h3>
+      <p
+        class="known-for"
+        *ngIf="person.known_for && person.known_for.length > 0"
+      >
+        {{ getKnownForText() }}
+      </p>
+    </div>
+  </div>
+</a>

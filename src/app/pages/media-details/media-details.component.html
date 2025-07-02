@@ -1,0 +1,116 @@
+<div *ngIf="media$ | async as media" class="media-details-root">
+  <div
+    class="media-details-poster-section"
+    [ngStyle]="{
+      'background-image': media.backdrop_path
+        ? 'linear-gradient(rgba(24,28,36,0.85), rgba(24,28,36,0.93)), url(https://image.tmdb.org/t/p/original' +
+          media.backdrop_path +
+          ')'
+        : media.poster_path
+        ? 'linear-gradient(rgba(24,28,36,0.85), rgba(24,28,36,0.93)), url(https://image.tmdb.org/t/p/original' +
+          media.poster_path +
+          ')'
+        : 'none',
+      'background-size': 'cover',
+      'background-position': 'center'
+    }"
+  >
+    <img
+      class="media-details-poster"
+      [src]="
+        'https://image.tmdb.org/t/p/w500' +
+        (media.poster_path || media.profile_path)
+      "
+      [alt]="media.title || media.name"
+    />
+    <div class="media-details-main">
+      <h1 class="media-details-title">{{ media.title || media.name }}</h1>
+      <div class="media-details-meta">
+        <span class="media-details-release">
+          {{ media.release_date || media.first_air_date | date : "mediumDate" }}
+        </span>
+        <span class="media-details-genres" *ngIf="media.genres">
+          <ng-container *ngFor="let genre of media.genres; let last = last">
+            {{ genre.name }}<span *ngIf="!last">, </span>
+          </ng-container>
+        </span>
+        <span class="media-details-rating" *ngIf="media.vote_average">
+          ★ {{ media.vote_average | number : "1.1-1" }}
+        </span>
+      </div>
+      <div class="media-details-actions">
+        <button class="media-action-btn" (click)="openTrailerModal()">
+          Watch Trailer
+        </button>
+      </div>
+      <p class="media-details-overview">{{ media.overview }}</p>
+    </div>
+  </div>
+
+  <div *ngIf="cast$ | async as cast" class="media-details-cast-row">
+    <h2 class="media-details-cast-title">Cast</h2>
+    <div class="media-details-cast-list">
+      <a
+        *ngFor="let actor of cast"
+        class="media-details-cast-card"
+        [routerLink]="['/person', actor.id]"
+      >
+        <ng-container *ngIf="actor.profile_path; else noCastImage">
+          <img
+            [src]="'https://image.tmdb.org/t/p/w185' + actor.profile_path"
+            [alt]="actor.name"
+          />
+        </ng-container>
+        <ng-template #noCastImage>
+          <div class="media-details-cast-no-image"></div>
+        </ng-template>
+        <div class="media-details-cast-info">
+          <div class="movie-details-cast-name">{{ actor.name }}</div>
+          <div class="movie-details-cast-character">{{ actor.character }}</div>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <div
+    *ngIf="youtubeTrailers$ | async as trailers"
+    class="media-details-trailers"
+  >
+    <h2 class="media-details-trailers-title">Trailers</h2>
+    <div class="media-details-trailer-list">
+      <div
+        *ngFor="let trailer of trailers"
+        class="media-details-trailer-thumb"
+        (click)="openSelectedTrailerModal(trailer.key)"
+        tabindex="0"
+        role="button"
+        aria-label="Play trailer"
+      >
+        <img
+          [src]="'https://img.youtube.com/vi/' + trailer.key + '/hqdefault.jpg'"
+          [alt]="trailer.name"
+          class="media-details-trailer-img"
+        />
+        <span class="media-details-trailer-play">▶</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div
+  class="trailer-modal-backdrop"
+  *ngIf="showTrailerModal"
+  (click)="closeTrailerModal()"
+>
+  <div class="trailer-modal" (click)="$event.stopPropagation()">
+    <button class="trailer-modal-close" (click)="closeTrailerModal()">✕</button>
+    <iframe
+      *ngIf="selectedTrailerUrl"
+      [src]="selectedTrailerUrl"
+      width="560"
+      height="315"
+      frameborder="0"
+      allowfullscreen
+    ></iframe>
+  </div>
+</div>

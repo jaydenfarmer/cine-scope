@@ -1,0 +1,21 @@
+<div class="known-for-row">
+  <a
+    *ngFor="let item of items"
+    class="known-for-card"
+    [routerLink]="[
+      item.media_type ? '/' + item.media_type : item.title ? '/movie' : '/tv',
+      item.id
+    ]"
+  >
+    <ng-container *ngIf="item.poster_path; else noPoster">
+      <img
+        [src]="'https://image.tmdb.org/t/p/w300' + item.poster_path"
+        [alt]="item.title || item.name"
+      />
+    </ng-container>
+    <ng-template #noPoster>
+      <div class="known-for-no-image"></div>
+    </ng-template>
+    <div class="known-for-title">{{ item.title || item.name }}</div>
+  </a>
+</div>

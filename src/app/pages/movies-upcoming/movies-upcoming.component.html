@@ -1,0 +1,31 @@
+<div class="page-layout">
+  <div class="sidebar">
+    <app-media-filter
+      [mediaType]="'movie'"
+      (filterChange)="onFilterChange($event)"
+    ></app-media-filter>
+  </div>
+  <div class="main-content">
+    <div *ngIf="noResults && !loading" class="no-results">
+      <h2>No Results Found</h2>
+      <p>Try adjusting your filters to find more upcoming movies.</p>
+    </div>
+
+    <div *ngIf="!noResults" class="movies-grid">
+      <app-media-card *ngFor="let movie of filteredMedia" [media]="movie">
+      </app-media-card>
+    </div>
+
+    <div
+      class="load-more-container"
+      *ngIf="showLoadMore && filteredMedia.length > 0 && !loading"
+    >
+      <button class="load-more-btn" (click)="loadMore()">Load More</button>
+    </div>
+
+    <div class="loading-container" *ngIf="loading">
+      <div class="loading-spinner"></div>
+      <p>Loading...</p>
+    </div>
+  </div>
+</div>

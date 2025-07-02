@@ -1,0 +1,71 @@
+<a
+  [routerLink]="[
+    media.media_type
+      ? '/' + media.media_type
+      : media.known_for?.length
+      ? '/person'
+      : media.title
+      ? '/movie'
+      : '/tv',
+    media.id
+  ]"
+  class="media-card-link"
+>
+  <div class="card-info-container">
+    <div
+      class="media-card"
+      [class.person-card]="media.known_for?.length"
+      [ngClass]="{
+        'no-image-person': !media.profile_path && media.known_for?.length,
+        'no-image-media':
+          !media.poster_path && !media.profile_path && !media.known_for?.length
+      }"
+    >
+      <img
+        [src]="
+          media.profile_path
+            ? 'https://image.tmdb.org/t/p/w300' + media.profile_path
+            : media.poster_path
+            ? 'https://image.tmdb.org/t/p/w300' + media.poster_path
+            : 'data:image/gif;base64,R0lGODlhAQABAAD/ACwAAAAAAQABAAACADs='
+        "
+        [alt]="media.title || media.name"
+        loading="lazy"
+      />
+    </div>
+
+    <div class="media-info">
+      <div
+        class="media-rating-badge"
+        [ngClass]="getRatingColor(media.vote_average)"
+        *ngIf="media.vote_average !== undefined && media.vote_average !== null"
+        [style.--rating]="media.vote_average * 10 + '%'"
+      >
+        <span class="rating-value">
+          {{
+            media.vote_average === 0
+              ? "NR"
+              : (media.vote_average | number : "1.1-1")
+          }}
+        </span>
+      </div>
+      <div class="media-title">{{ media.title || media.name }}</div>
+      <div
+        class="media-known-for"
+        *ngIf="media.known_for?.length; else showReleaseDate"
+      >
+        <span class="known-for-label">Known for:</span>
+        <span class="known-for-list">
+          <ng-container *ngFor="let work of media.known_for; let last = last">
+            {{ work.title || work.name }}<span *ngIf="!last">, </span>
+          </ng-container>
+        </span>
+      </div>
+      <ng-template #showReleaseDate>
+        <div class="media-release-date">
+          {{ media.release_date || media.first_air_date | date : "mediumDate" }}
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</a>

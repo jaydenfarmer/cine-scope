@@ -1,0 +1,122 @@
+.person-details-root {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  padding: 2rem;
+  gap: 2.5rem;
+  font-family: "Roboto", Arial, sans-serif;
+}
+
+.person-details-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.person-details-photo {
+  width: 320px;
+  height: 450px;
+  object-fit: cover;
+  border-radius: 1rem;
+  margin-bottom: 1.5rem;
+  flex-shrink: 0;
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+}
+
+.person-details-photo.no-image-person {
+  background-image: url("../../../../public/people-no-image.svg");
+  background-size: 60% 60%;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #e0e0e0;
+}
+
+.person-details-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  align-items: flex-start;
+  font-size: 1.08rem;
+  color: #444;
+  font-family: "Roboto", Arial, sans-serif;
+  background: #c4c4c4;
+  border-radius: 0.5rem;
+  padding: 1rem 1.5rem;
+  margin-top: 1rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.person-details-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  font-family: "Roboto", Arial, sans-serif;
+  max-width: 700px;
+  width: 100%;
+  min-width: 0;
+}
+
+.person-details-info h1 {
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 2.4rem;
+  margin-top: 0;
+  margin-bottom: 1rem;
+  color: var(--known-for-title-color, #1a1a1a);
+  letter-spacing: 0.5px;
+}
+
+.person-details-info h2 {
+  font-family: "Montserrat", Arial, sans-serif;
+  font-size: 1.3rem;
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: var(--background-accent);
+  letter-spacing: 0.2px;
+}
+
+.person-details-info p {
+  margin-top: 0;
+  margin-bottom: 1.5rem;
+  font-size: 1.08rem;
+  color: var(--known-for-title-color, #1a1a1a);
+  line-height: 1.6;
+}
+
+.bio-inline-btn {
+  background: none;
+  border: none;
+  color: var(--background-accent);
+  font-size: 0.95em;
+  margin-left: 0.5em;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  vertical-align: middle;
+  transition: color 0.2s;
+}
+.bio-inline-btn:hover {
+  color: #e73370;
+}
+
+@media (max-width: 480px) {
+  .person-details-root {
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+  }
+
+  .person-details-left {
+    margin-bottom: 1.5rem;
+  }
+
+  .person-details-photo {
+    width: 100%;
+    max-width: 320px;
+    height: auto;
+  }
+
+  .person-details-info {
+    width: 100%;
+    max-width: none;
+  }
+}

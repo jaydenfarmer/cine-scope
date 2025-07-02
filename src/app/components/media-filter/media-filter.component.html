@@ -1,0 +1,309 @@
+<div class="media-filter">
+  <div class="filter-label">
+    <div class="sort-group" [class.open]="sortOpen">
+      <button
+        class="sort-toggle"
+        [class.open]="sortOpen"
+        (click)="toggleSort()"
+        type="button"
+      >
+        Sort
+        <span [class.open]="sortOpen">&#9654;</span>
+      </button>
+      <div *ngIf="sortOpen" class="sort-dropdown">
+        <label for="sort-select" class="sort-dropdown-label">Sort by:</label>
+        <select
+          id="sort-select"
+          [(ngModel)]="sortField"
+          (change)="onSortFieldChange($event)"
+        >
+          <option value="popularity.desc">Popularity Descending</option>
+          <option value="popularity.asc">Popularity Ascending</option>
+          <option value="vote_average.desc">Rating Descending</option>
+          <option value="vote_average.asc">Rating Ascending</option>
+          <ng-container *ngIf="mediaType === 'movie'">
+            <option value="primary_release_date.desc">
+              Release Date Descending
+            </option>
+            <option value="primary_release_date.asc">
+              Release Date Ascending
+            </option>
+            <option value="original_title.asc">Title (A-Z)</option>
+            <option value="original_title.desc">Title (Z-A)</option>
+          </ng-container>
+          <ng-container *ngIf="mediaType === 'tv'">
+            <option value="first_air_date.desc">
+              First Air Date Descending
+            </option>
+            <option value="first_air_date.asc">First Air Date Ascending</option>
+            <option value="original_name.asc">Title (A-Z)</option>
+            <option value="original_name.desc">Title (Z-A)</option>
+          </ng-container>
+        </select>
+      </div>
+    </div>
+    <div
+      class="provider-group"
+      [class.open]="providersOpen"
+      *ngIf="providers.length"
+    >
+      <button
+        class="provider-toggle"
+        [class.open]="providersOpen"
+        (click)="providersOpen = !providersOpen"
+        type="button"
+      >
+        Where to Watch
+        <span [class.open]="providersOpen">&#9654;</span>
+      </button>
+      <div *ngIf="providersOpen" class="provider-dropdown">
+        <div class="provider-icons">
+          <button
+            *ngFor="let provider of providers"
+            type="button"
+            class="provider-icon-btn"
+            [class.selected]="selectedProviders.includes(provider.provider_id)"
+            (click)="toggleProvider(provider.provider_id)"
+            [attr.aria-label]="provider.provider_name"
+          >
+            <img
+              [src]="'https://image.tmdb.org/t/p/w92' + provider.logo_path"
+              [alt]="provider.provider_name"
+              class="provider-icon-img"
+            />
+            <div class="provider-tooltip">
+              {{ provider.provider_name }}
+              <div class="tooltip-arrow"></div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="filters-group" [class.open]="filtersOpen">
+      <button
+        class="filters-toggle"
+        [class.open]="filtersOpen"
+        (click)="filtersOpen = !filtersOpen"
+        type="button"
+      >
+        Filters
+        <span [class.open]="filtersOpen">&#9654;</span>
+      </button>
+      <div *ngIf="filtersOpen" class="filters-dropdown">
+        <!-- Show Me -->
+        <!-- <div class="filter-section">
+          <label class="filter-label">Show Me</label>
+          <select [(ngModel)]="showMe">
+            <option value="everything">Everything</option>
+            <option value="not-seen">Movies I Haven't Seen</option>
+            <option value="seen">Movies I Have Seen</option>
+          </select>
+        </div> -->
+        <!-- Availabilities -->
+        <div class="filter-section">
+          <label class="filter-label">Availabilities</label>
+          <input
+            type="checkbox"
+            [(ngModel)]="allAvailabilities"
+            id="all-availabilities"
+          />
+          <label for="all-availabilities">Search all availabilities?</label>
+        </div>
+
+        <!-- Release Dates -->
+        <div class="filter-section with-bar">
+          <label class="filter-label">Release Dates</label>
+          <div class="inline-checkbox">
+            <input
+              type="checkbox"
+              [(ngModel)]="allReleases"
+              id="all-releases"
+            />
+
+            <label for="all-releases">Search all releases?</label>
+          </div>
+          <!-- Hide this when allReleases is checked -->
+          <ng-container *ngIf="!allReleases">
+            <div class="inline-checkbox">
+              <input
+                type="checkbox"
+                [(ngModel)]="allCountries"
+                id="all-countries"
+              />
+              <label for="all-countries">Search all countries?</label>
+            </div>
+            <div *ngIf="!allCountries" class="country-select">
+              <label for="country-select">Country:</label>
+              <select id="country-select" [(ngModel)]="selectedCountry">
+                <option value="">Select a country...</option>
+                <option
+                  *ngFor="let country of countries"
+                  [value]="country.code"
+                >
+                  {{ country.name }}
+                </option>
+              </select>
+            </div>
+            <div class="release-types">
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.limited" />
+                Theatrical (limited)</label
+              >
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.theatrical" />
+                Theatrical</label
+              >
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.premiere" />
+                Premiere</label
+              >
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.digital" />
+                Digital</label
+              >
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.physical" />
+                Physical</label
+              >
+              <label
+                ><input type="checkbox" [(ngModel)]="releaseTypes.tv" />
+                TV</label
+              >
+            </div>
+          </ng-container>
+
+          <div class="release-dates-range">
+            <div class="date-field">
+              <label for="release-from">From</label>
+              <input id="release-from" type="date" [(ngModel)]="releaseFrom" />
+            </div>
+            <div class="date-field">
+              <label for="release-to">To</label>
+              <input id="release-to" type="date" [(ngModel)]="releaseTo" />
+            </div>
+          </div>
+          <!-- Genres -->
+          <div class="genres-list-box with-bar">
+            <label class="filter-label">Genres</label>
+            <button
+              *ngFor="let genre of genres; trackBy: trackByGenre"
+              type="button"
+              class="genre-btn"
+              [class.selected]="selectedGenres.includes(genre.id)"
+              (click)="toggleGenre(genre.id)"
+            >
+              {{ genre.name }}
+            </button>
+          </div>
+
+          <!-- Certifications -->
+          <div class="cert-list-box with-bar">
+            <label class="filter-label">Certifications</label>
+            <button
+              *ngFor="let cert of certifications; trackBy: trackByCert"
+              type="button"
+              class="genre-btn"
+              [class.selected]="selectedCertifications.includes(cert.id)"
+              (click)="toggleCertification(cert.id)"
+            >
+              {{ cert.name }}
+            </button>
+          </div>
+          <!-- Language -->
+          <div class="filter-section with-bar">
+            <label class="filter-label">Language</label>
+            <select [(ngModel)]="language">
+              <option value="">None Selected</option>
+              <option *ngFor="let lang of languages" [value]="lang.code">
+                {{ lang.name }}
+              </option>
+            </select>
+          </div>
+          <!-- User Score -->
+          <div class="filter-section with-bar">
+            <label class="filter-label">User Score</label>
+            <input
+              type="range"
+              min="0"
+              max="10"
+              step="1"
+              [(ngModel)]="userScore"
+              list="score-ticks"
+            />
+            <datalist id="score-ticks">
+              <option value="0" label="0"></option>
+              <option value="5"></option>
+              <option value="10" label="10"></option>
+            </datalist>
+            <span>{{ userScore }}</span>
+          </div>
+          <!-- Minimum User Votes -->
+          <div class="filter-section with-bar">
+            <label class="filter-label">Minimum User Votes</label>
+            <input
+              type="range"
+              min="0"
+              max="500"
+              step="50"
+              [(ngModel)]="minVotes"
+              list="votes-ticks"
+            />
+            <datalist id="votes-ticks">
+              <option value="0" label="0"></option>
+              <option value="50"></option>
+              <option value="100"></option>
+              <option value="150"></option>
+              <option value="200"></option>
+              <option value="250"></option>
+              <option value="300"></option>
+              <option value="350"></option>
+              <option value="400"></option>
+              <option value="450"></option>
+              <option value="500" label="500"></option>
+            </datalist>
+            <span>{{ minVotes }}</span>
+          </div>
+          <!-- Runtime -->
+          <div class="filter-section with-bar">
+            <label class="filter-label">Runtime (minutes)</label>
+            <input
+              type="range"
+              min="0"
+              max="360"
+              step="15"
+              [(ngModel)]="runtime"
+              list="runtime-ticks"
+            />
+            <datalist id="runtime-ticks">
+              <option value="0" label="0"></option>
+              <option value="120"></option>
+              <option value="240"></option>
+              <option value="360" label="360"></option>
+            </datalist>
+            <span>{{ runtime }}</span>
+          </div>
+          <!-- Keywords -->
+          <div class="filter-section-last with-bar">
+            <label class="filter-label">Keywords</label>
+            <input
+              type="text"
+              [(ngModel)]="keywords"
+              placeholder="Filter by keywords..."
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Search Button -->
+    <div class="sticky-search-btn" [class.sticky]="filtersChanged()">
+      <button
+        type="button"
+        class="search-btn"
+        (click)="onSearch()"
+        [disabled]="!filtersChanged()"
+      >
+        Search
+      </button>
+    </div>
+  </div>
+</div>

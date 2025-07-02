@@ -1,0 +1,34 @@
+<a
+  [routerLink]="[mediaType === 'movie' ? '/movie' : '/tv', media.id]"
+  class="home-card-link"
+>
+  <div class="home-card">
+    <div class="media-image">
+      <img
+        [src]="'https://image.tmdb.org/t/p/w342' + media.poster_path"
+        [alt]="media.title || media.name"
+        loading="lazy"
+      />
+    </div>
+    <div class="media-info">
+      <div
+        *ngIf="media.vote_average"
+        class="rating-badge"
+        [ngClass]="getRatingColor(media.vote_average)"
+        [style.--rating]="media.vote_average * 10 + '%'"
+      >
+        <span class="rating-value">
+          {{
+            media.vote_average === 0
+              ? "NR"
+              : (media.vote_average | number : "1.1-1")
+          }}
+        </span>
+      </div>
+      <h3 class="media-title">{{ media.title || media.name }}</h3>
+      <p class="media-date">
+        {{ media.release_date || media.first_air_date | date : "MMM d, y" }}
+      </p>
+    </div>
+  </div>
+</a>

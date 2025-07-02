@@ -1,0 +1,38 @@
+.trailer-row {
+  width: 100%;
+  padding: 0;
+}
+
+.trailer-scroll-container {
+  display: flex;
+  overflow-x: auto;
+  gap: 1.5rem;
+  padding: 1rem 0;
+  scrollbar-width: thin;
+  scrollbar-color: var(--accent) transparent;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: var(--accent);
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb:hover {
+    background: var(--accent-hover);
+  }
+}
+
+@media (max-width: 480px) {
+  .trailer-scroll-container {
+    padding: 1rem 0;
+    gap: 1rem;
+  }
+}

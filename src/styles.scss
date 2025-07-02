@@ -1,1 +1,158 @@
-/* You can add global styles to this file, and also import other style files */
+/* Import fonts if needed */
+@import url("https://fonts.googleapis.com/css?family=Montserrat:400,600&display=swap");
+
+/* App container layout */
+.app-container {
+  padding-left: 2vw;
+  padding-right: 2vw;
+  max-width: 1400px;
+  margin: 0 auto;
+  margin-top: 5rem;
+}
+
+/* Color variables for light and dark mode */
+:root {
+  --background: #f5f6fa;
+  --text: #23283a;
+  --cast-info-bg: #fff;
+  --cast-info-text: #23283a;
+  --known-for-title-color: #23283a;
+  --background-accent: #79b672;
+  --background-accent-focus: #98b994;
+}
+
+.dark-mode {
+  --background: #181a20;
+  --text: #f7f7fa;
+  --cast-info-bg: #23283a;
+  --cast-info-text: #f7f7fa;
+  --known-for-title-color: #f7f7fa;
+  --background-accent: #767df9;
+  --background-accent-focus: #9a9ffe;
+}
+
+/* Global body styles */
+body {
+  background: var(--background);
+  color: var(--text);
+  font-family: "Montserrat", "Segoe UI", Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* Main page (vertical) scrollbar: always gray, not affected by theme */
+html::-webkit-scrollbar,
+body::-webkit-scrollbar {
+  width: 16px;
+  background: #e0e0e0;
+}
+html::-webkit-scrollbar-thumb,
+body::-webkit-scrollbar-thumb {
+  background: #b0b0b0;
+  border-radius: 8px;
+}
+html::-webkit-scrollbar-track,
+body::-webkit-scrollbar-track {
+  background: #f5f5f5;
+  border-radius: 8px;
+}
+
+/* All other scrollbars (e.g., horizontal rows, cast lists): theme-based */
+*::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+*::-webkit-scrollbar-thumb {
+  background: var(--background-accent);
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+*::-webkit-scrollbar-track {
+  background: #23283a;
+  border-radius: 8px;
+}
+
+/* Firefox: main page */
+html,
+body {
+  scrollbar-color: #b0b0b0 #f5f5f5;
+}
+/* Firefox: all other elements */
+* {
+  scrollbar-color: var(--background-accent) #23283a;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+.text-right {
+  text-align: right;
+}
+.text-left {
+  text-align: left;
+}
+
+/* Responsive images */
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.sidebar {
+  width: 260px;
+  // min-width: 200px;
+  // max-width: 320px;
+  flex-shrink: 0;
+}
+
+.page-layout {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  width: 100%;
+  box-sizing: border-box;
+}
+.main-content {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+html,
+body {
+  height: 100%;
+}
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+// /* Responsive sidebar behavior */
+// @media (max-width: 768px) {
+//   .sidebar {
+//     width: 260px; // Smaller sidebar on mobile but not too small to prevent right bleed
+//     min-width: 200px;
+//   }
+// }
+
+@media (max-width: 480px) {
+  .page-layout {
+    flex-direction: column;
+    align-items: center; // This centers all children (sidebar + main-content)
+  }
+
+  .main-content {
+    width: auto; // Don't force full width
+    max-width: 350px; // Limit the width
+    margin: 0; // Remove any existing margins
+  }
+
+  .sidebar {
+    width: 260px;
+    order: -1;
+    margin: 0 auto;
+  }
+}

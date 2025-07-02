@@ -8,7 +8,7 @@
   overflow-x: auto;
   gap: 1.5rem;
   padding: 1rem 0;
-  scrollbar-width: thin;
+  scrollbar-width: auto;
   scrollbar-color: var(--accent) transparent;
 
   &::-webkit-scrollbar {
@@ -28,6 +28,13 @@
   &::-webkit-scrollbar-thumb:hover {
     background: var(--accent-hover);
   }
+}
+
+.no-trailers {
+  padding: 2rem;
+  text-align: center;
+  color: var(--text-secondary, #666);
+  font-style: italic;
 }
 
 @media (max-width: 480px) {

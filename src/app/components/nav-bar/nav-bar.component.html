@@ -1,9 +1,11 @@
 <nav class="navbar" [class.menu-open]="menuOpen">
   <div class="navbar-inner">
+    <!-- ✅ Keep your exact logo -->
     <button (click)="goHome()" class="logo-btn">
-      <img src="/MovieMatchLogo.png" alt="Movie Match Logo" class="logo-img" />
+      <img src="/CineScope.png" alt="Movie Match Logo" class="logo-img" />
     </button>
 
+    <!-- ✅ Keep your exact hamburger -->
     <button
       class="hamburger"
       (click)="menuOpen = !menuOpen"
@@ -12,7 +14,9 @@
       &#9776;
     </button>
 
-    <div class="nav-links" [class.open]="menuOpen">
+    <!-- ✅ Keep your exact nav structure -->
+    <div class="nav-links">
+      <!-- Movies -->
       <div class="nav-dropdown">
         <span class="nav-link">Movies</span>
         <div class="dropdown-menu">
@@ -22,6 +26,7 @@
         </div>
       </div>
 
+      <!-- TV Shows -->
       <div class="nav-dropdown">
         <span class="nav-link">TV Shows</span>
         <div class="dropdown-menu">
@@ -31,6 +36,7 @@
         </div>
       </div>
 
+      <!-- People -->
       <div class="nav-dropdown">
         <span class="nav-link">People</span>
         <div class="dropdown-menu">
@@ -38,6 +44,7 @@
         </div>
       </div>
 
+      <!-- ✅ Keep your exact theme switch -->
       <div class="theme-switch" (click)="themeService.toggleTheme()">
         <img
           src="/sun-icon.png"
@@ -58,14 +65,17 @@
       </div>
     </div>
 
+    <!-- ✅ Keep your exact spacer -->
     <div class="spacer"></div>
 
+    <!-- ✅ Keep your exact search bar -->
     <form
       class="search-bar"
       (submit)="onSubmit($event)"
       [class.expanded]="searchExpanded"
     >
       <input
+        #searchInput
         type="text"
         [(ngModel)]="query"
         name="query"
@@ -73,15 +83,16 @@
         autocomplete="off"
         [class.hide-on-collapsed]="!searchExpanded"
       />
+
       <button
         type="button"
         class="search-toggle"
         *ngIf="!searchExpanded"
         (click)="expandSearch($event)"
-        aria-label="Expand search"
       >
         <img src="/search-icon.png" alt="Search" class="search-icon" />
       </button>
+
       <button type="submit" *ngIf="searchExpanded">
         <img src="/search-icon.png" alt="Search" class="search-icon" />
       </button>

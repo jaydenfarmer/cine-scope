@@ -1,8 +1,8 @@
-<div class="trailer-row">
+<div class="trailer-row" *ngIf="hasTrailerData()">
   <div class="trailer-scroll-container">
-    <ng-container *ngFor="let item of trailerData">
+    <ng-container *ngFor="let item of trailerData; trackBy: trackByMedia">
       <app-trailer-card
-        *ngFor="let trailer of item.trailers"
+        *ngFor="let trailer of item.trailers; trackBy: trackByTrailer"
         [media]="item.media"
         [trailer]="trailer"
         (trailerClick)="onTrailerClick($event)"
@@ -10,4 +10,9 @@
       </app-trailer-card>
     </ng-container>
   </div>
+</div>
+
+<!-- ✅ Optional: Show message when no trailers -->
+<div class="no-trailers" *ngIf="!hasTrailerData()">
+  <p>No trailers available at this time.</p>
 </div>

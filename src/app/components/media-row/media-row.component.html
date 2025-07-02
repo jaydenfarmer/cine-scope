@@ -1,11 +1,23 @@
 <div class="row-container">
-  <h2 *ngIf="title">{{ title }}</h2>
-  <div class="media-row">
+  <h2 *ngIf="title" class="row-title">{{ title }}</h2>
+
+  <!-- ✅ Loading state -->
+  <div *ngIf="isLoading" class="loading-skeleton">
+    <div class="skeleton-card" *ngFor="let i of [1, 2, 3, 4, 5]"></div>
+  </div>
+
+  <!-- ✅ Content with data -->
+  <div *ngIf="!isLoading && hasItems()" class="media-row">
     <app-home-card
-      *ngFor="let item of items"
+      *ngFor="let item of items; trackBy: trackByItem"
       [media]="item"
       [mediaType]="mediaType"
     >
     </app-home-card>
+  </div>
+
+  <!-- ✅ Empty state -->
+  <div *ngIf="!isLoading && !hasItems()" class="empty-state">
+    <p>{{ emptyMessage }}</p>
   </div>
 </div>

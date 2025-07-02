@@ -6,6 +6,7 @@
 
 .home-card {
   width: 150px;
+  transition: transform 0.2s ease;
   flex-shrink: 0;
   background: var(--background);
   border-radius: 12px;

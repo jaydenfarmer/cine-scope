@@ -1,16 +1,19 @@
 <div class="home-sections">
-  <!-- Trending Section -->
-  <section class="media-section">
+  <!-- ✅ Trending Section -->
+  <div class="media-section">
     <div class="section-header">
       <span class="section-label">Trending</span>
+
       <!-- Desktop Switch -->
       <div class="section-switch desktop-only">
         <span
           class="switch-option"
           [class.active]="trendingType === 'movie'"
           (click)="setTrendingType('movie')"
-          >Movies</span
+          [attr.aria-pressed]="trendingType === 'movie'"
         >
+          Movies
+        </span>
         <span
           class="switch-slider"
           [class.right]="trendingType === 'tv'"
@@ -19,69 +22,68 @@
           class="switch-option"
           [class.active]="trendingType === 'tv'"
           (click)="setTrendingType('tv')"
-          >Shows</span
+          [attr.aria-pressed]="trendingType === 'tv'"
         >
+          Shows
+        </span>
       </div>
+
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
           [(ngModel)]="trendingType"
           (ngModelChange)="setTrendingType($event)"
           class="dropdown-select"
+          [attr.aria-label]="'Select trending type'"
         >
           <option value="movie">Movies</option>
-          <option value="tv">Shows</option>
+          <option value="tv">TV Shows</option>
         </select>
       </div>
     </div>
+
+    <!-- ✅ Content with loading state -->
+    <div *ngIf="isLoadingTrending" class="loading-state">
+      Loading trending content...
+    </div>
     <app-media-row
+      *ngIf="!isLoadingTrending && hasData(trendingItems)"
       [items]="trendingItems"
       [mediaType]="trendingType"
     ></app-media-row>
-  </section>
-  <!-- Latest Trailers Section -->
-  <section class="media-section">
+    <div
+      *ngIf="!isLoadingTrending && !hasData(trendingItems)"
+      class="no-content"
+    >
+      No trending content available.
+    </div>
+  </div>
+
+  <!-- ✅ Latest Trailers Section -->
+  <div class="media-section">
     <div class="section-header">
       <span class="section-label">Latest Trailers</span>
+
       <!-- Desktop Multi-Switch -->
       <div class="section-multi-switch desktop-only">
         <span
+          *ngFor="let option of trailersOptions"
           class="multi-switch-option"
-          [class.active]="trailersCategory === 'popular'"
-          (click)="setTrailersCategory('popular')"
-          >Popular</span
+          [class.active]="trailersCategory === option"
+          (click)="setTrailersCategory(option)"
+          [attr.aria-pressed]="trailersCategory === option"
         >
-        <span
-          class="multi-switch-option"
-          [class.active]="trailersCategory === 'streaming'"
-          (click)="setTrailersCategory('streaming')"
-          >Streaming</span
-        >
-        <span
-          class="multi-switch-option"
-          [class.active]="trailersCategory === 'on_tv'"
-          (click)="setTrailersCategory('on_tv')"
-          >On TV</span
-        >
-        <span
-          class="multi-switch-option"
-          [class.active]="trailersCategory === 'for_rent'"
-          (click)="setTrailersCategory('for_rent')"
-          >For Rent</span
-        >
-        <span
-          class="multi-switch-option"
-          [class.active]="trailersCategory === 'in_theaters'"
-          (click)="setTrailersCategory('in_theaters')"
-          >In Theaters</span
-        >
+          {{ getTrailersCategoryLabel(option) }}
+        </span>
       </div>
+
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
           [(ngModel)]="trailersCategory"
           (ngModelChange)="setTrailersCategory($event)"
           class="dropdown-select"
+          [attr.aria-label]="'Select trailers category'"
         >
           <option value="popular">Popular</option>
           <option value="streaming">Streaming</option>
@@ -91,48 +93,48 @@
         </select>
       </div>
     </div>
+
+    <div *ngIf="isLoadingTrailers" class="loading-state">
+      Loading trailers...
+    </div>
     <app-trailer-row
+      *ngIf="!isLoadingTrailers && hasData(latestTrailersData)"
       [trailerData]="latestTrailersData"
       (trailerClick)="onTrailerClick($event)"
     ></app-trailer-row>
-  </section>
-  <!-- What's Popular Section -->
-  <section class="media-section">
+    <div
+      *ngIf="!isLoadingTrailers && !hasData(latestTrailersData)"
+      class="no-content"
+    >
+      No trailers available for this category.
+    </div>
+  </div>
+
+  <!-- ✅ What's Popular Section -->
+  <div class="media-section">
     <div class="section-header">
       <span class="section-label">What's Popular</span>
+
       <!-- Desktop Multi-Switch -->
       <div class="section-multi-switch desktop-only">
         <span
+          *ngFor="let option of popularOptions"
           class="multi-switch-option"
-          [class.active]="popularCategory === 'streaming'"
-          (click)="setPopularCategory('streaming')"
-          >Streaming</span
+          [class.active]="popularCategory === option"
+          (click)="setPopularCategory(option)"
+          [attr.aria-pressed]="popularCategory === option"
         >
-        <span
-          class="multi-switch-option"
-          [class.active]="popularCategory === 'on_tv'"
-          (click)="setPopularCategory('on_tv')"
-          >On TV</span
-        >
-        <span
-          class="multi-switch-option"
-          [class.active]="popularCategory === 'for_rent'"
-          (click)="setPopularCategory('for_rent')"
-          >For Rent</span
-        >
-        <span
-          class="multi-switch-option"
-          [class.active]="popularCategory === 'in_theaters'"
-          (click)="setPopularCategory('in_theaters')"
-          >In Theaters</span
-        >
+          {{ getPopularCategoryLabel(option) }}
+        </span>
       </div>
+
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
           [(ngModel)]="popularCategory"
           (ngModelChange)="setPopularCategory($event)"
           class="dropdown-select"
+          [attr.aria-label]="'Select popular category'"
         >
           <option value="streaming">Streaming</option>
           <option value="on_tv">On TV</option>
@@ -141,52 +143,91 @@
         </select>
       </div>
     </div>
-    <app-media-row [items]="whatsPopular" [mediaType]="'movie'"></app-media-row>
-  </section>
-  <!-- Free to Watch Section -->
-  <section class="media-section">
+
+    <div *ngIf="isLoadingPopular" class="loading-state">
+      Loading popular content...
+    </div>
+    <app-media-row
+      *ngIf="!isLoadingPopular && hasData(whatsPopular)"
+      [items]="whatsPopular"
+      [mediaType]="'movie'"
+    ></app-media-row>
+    <div *ngIf="!isLoadingPopular && !hasData(whatsPopular)" class="no-content">
+      No popular content available.
+    </div>
+  </div>
+
+  <!-- ✅ Free to Watch Section -->
+  <div class="media-section">
     <div class="section-header">
       <span class="section-label">Free to Watch</span>
+
       <!-- Desktop Switch -->
       <div class="section-switch desktop-only">
         <span
           class="switch-option"
           [class.active]="freeType === 'movie'"
           (click)="setFreeType('movie')"
-          >Movies</span
+          [attr.aria-pressed]="freeType === 'movie'"
         >
+          Movies
+        </span>
         <span class="switch-slider" [class.right]="freeType === 'tv'"></span>
         <span
           class="switch-option"
           [class.active]="freeType === 'tv'"
           (click)="setFreeType('tv')"
-          >Shows</span
+          [attr.aria-pressed]="freeType === 'tv'"
         >
+          Shows
+        </span>
       </div>
+
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
           [(ngModel)]="freeType"
           (ngModelChange)="setFreeType($event)"
           class="dropdown-select"
+          [attr.aria-label]="'Select free content type'"
         >
           <option value="movie">Movies</option>
-          <option value="tv">Shows</option>
+          <option value="tv">TV Shows</option>
         </select>
       </div>
     </div>
-    <app-media-row [items]="freeToWatch" [mediaType]="freeType"></app-media-row>
-  </section>
+
+    <div *ngIf="isLoadingFree" class="loading-state">
+      Loading free content...
+    </div>
+    <app-media-row
+      *ngIf="!isLoadingFree && hasData(freeToWatch)"
+      [items]="freeToWatch"
+      [mediaType]="freeType"
+    ></app-media-row>
+    <div *ngIf="!isLoadingFree && !hasData(freeToWatch)" class="no-content">
+      No free content available.
+    </div>
+  </div>
 </div>
 
-<!-- Trailer Modal -->
+<!-- ✅ Safer Trailer Modal -->
 <div
-  class="trailer-modal-backdrop"
   *ngIf="showTrailerModal"
+  class="trailer-modal-backdrop"
   (click)="closeTrailerModal()"
+  [attr.aria-label]="'Trailer modal'"
+  role="dialog"
+  aria-modal="true"
 >
   <div class="trailer-modal" (click)="$event.stopPropagation()">
-    <button class="trailer-modal-close" (click)="closeTrailerModal()">✕</button>
+    <button
+      class="trailer-modal-close"
+      (click)="closeTrailerModal()"
+      [attr.aria-label]="'Close trailer modal'"
+    >
+      ✕
+    </button>
     <iframe
       *ngIf="selectedTrailerUrl"
       [src]="selectedTrailerUrl"
@@ -194,6 +235,7 @@
       height="315"
       frameborder="0"
       allowfullscreen
+      [attr.title]="'Movie trailer'"
     ></iframe>
   </div>
 </div>

@@ -44,6 +44,21 @@
   padding: 1rem 1.5rem;
   margin-top: 1rem;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  
+  .age-info {
+    color: var(--text-secondary);
+    font-size: 0.9em;
+    font-style: italic;
+  }
+  
+  // ✅ Subtle styling for deceased persons
+  .deceased-info {
+    color: var(--text-secondary);
+    
+    .death-date {
+      color: #ff9999; // Subtle red tint
+    }
+  }
 }
 
 .person-details-info {

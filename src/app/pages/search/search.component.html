@@ -1,57 +1,118 @@
 <div class="page-layout">
-  <div class="sidebar">
-    <div class="search-sidebar">
-      <div class="sidebar-title">Search Results</div>
-      <button
-        class="sidebar-option"
-        [class.selected]="selectedCategory === 'movies'"
-        (click)="setCategory('movies')"
-      >
-        Movies <span class="count">{{ totalMovieResults }}</span>
-      </button>
-      <button
-        class="sidebar-option"
-        [class.selected]="selectedCategory === 'tv'"
-        (click)="setCategory('tv')"
-      >
-        TV Shows <span class="count">{{ totalTvResults }}</span>
-      </button>
-      <button
-        class="sidebar-option"
-        [class.selected]="selectedCategory === 'people'"
-        (click)="setCategory('people')"
-      >
-        People <span class="count">{{ totalPeopleResults }}</span>
-      </button>
-    </div>
-  </div>
+  <ng-container *ngIf="searchResults$ | async as results">
+    <!-- ✅ Sidebar - Keep your exact styling -->
+    <div class="sidebar">
+      <div class="search-sidebar">
+        <div class="sidebar-title">Search Results</div>
 
-  <div class="main-content">
-    <ng-container [ngSwitch]="selectedCategory">
-      <div *ngSwitchCase="'movies'">
-        <h2 class="search-title">Movies</h2>
-        <div class="media-grid">
-          <app-media-card *ngFor="let movie of searchMovies" [media]="movie">
-          </app-media-card>
+        <!-- ✅ Show search query -->
+        <div *ngIf="results.query" class="search-query">
+          "{{ results.query }}"
+        </div>
+
+        <!-- ✅ Loading state -->
+        <div *ngIf="results.isLoading" class="loading-message">
+          Searching...
+        </div>
+
+        <!-- ✅ Filter buttons -->
+        <button
+          class="sidebar-option"
+          [class.selected]="selectedCategory === 'movies'"
+          [disabled]="results.isLoading || results.totalMovieResults === 0"
+          (click)="setCategory('movies')"
+        >
+          Movies <span class="count">{{ results.totalMovieResults }}</span>
+        </button>
+
+        <button
+          class="sidebar-option"
+          [class.selected]="selectedCategory === 'tv'"
+          [disabled]="results.isLoading || results.totalTvResults === 0"
+          (click)="setCategory('tv')"
+        >
+          TV Shows <span class="count">{{ results.totalTvResults }}</span>
+        </button>
+
+        <button
+          class="sidebar-option"
+          [class.selected]="selectedCategory === 'people'"
+          [disabled]="results.isLoading || results.totalPeopleResults === 0"
+          (click)="setCategory('people')"
+        >
+          People <span class="count">{{ results.totalPeopleResults }}</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ✅ Main content - Keep your exact styling -->
+    <div class="main-content">
+      <!-- ✅ Error state -->
+      <div *ngIf="results.error" class="error-message">
+        <h2>{{ results.error }}</h2>
+        <p>Please try searching for something else.</p>
+      </div>
+
+      <!-- ✅ Loading state -->
+      <div *ngIf="results.isLoading && !results.error" class="loading-content">
+        <h2>Searching for "{{ results.query }}"...</h2>
+        <div class="loading-grid">
+          <div *ngFor="let i of [1, 2, 3, 4, 5, 6]" class="skeleton-card"></div>
         </div>
       </div>
-      <div *ngSwitchCase="'tv'">
-        <h2 class="search-title">TV Shows</h2>
-        <div class="media-grid">
-          <app-media-card *ngFor="let show of searchTvShows" [media]="show">
+
+      <!-- ✅ No search state -->
+      <div *ngIf="!results.query && !results.isLoading" class="no-search-state">
+        <h2>Enter a search term to find movies, TV shows, and people</h2>
+      </div>
+
+      <!-- ✅ No results state -->
+      <div
+        *ngIf="
+          results.query &&
+          !hasResults(results) &&
+          !results.isLoading &&
+          !results.error
+        "
+        class="no-results-state"
+      >
+        <h2>No results found for "{{ results.query }}"</h2>
+        <p>Try searching for something else.</p>
+      </div>
+
+      <!-- ✅ Results display -->
+      <div *ngIf="hasResults(results) && !results.isLoading && !results.error">
+        <h2 class="search-title">
+          {{
+            selectedCategory === "movies"
+              ? "Movies"
+              : selectedCategory === "tv"
+              ? "TV Shows"
+              : "People"
+          }}
+        </h2>
+
+        <!-- ✅ Movies & TV Shows use media-grid -->
+        <div *ngIf="selectedCategory !== 'people'" class="media-grid">
+          <app-media-card
+            *ngFor="let item of getCurrentResults(results); trackBy: trackByFn"
+            [media]="item"
+          >
           </app-media-card>
         </div>
-      </div>
-      <div *ngSwitchCase="'people'">
-        <h2 class="search-title">People</h2>
-        <div class="people-grid">
+
+        <!-- ✅ People use people-grid -->
+        <div *ngIf="selectedCategory === 'people'" class="people-grid">
           <app-people-card
-            *ngFor="let person of searchPeople"
+            *ngFor="
+              let person of getCurrentResults(results);
+              trackBy: trackByFn
+            "
             [person]="person"
           >
           </app-people-card>
         </div>
       </div>
-    </ng-container>
-  </div>
+    </div>
+  </ng-container>
 </div>

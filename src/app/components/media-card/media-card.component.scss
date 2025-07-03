@@ -133,6 +133,7 @@
   text-overflow: ellipsis;
   white-space: nowrap;
 }
+
 a,
 a:visited,
 a:hover,
@@ -173,21 +174,6 @@ a:active {
   line-clamp: 2;
   -webkit-box-orient: vertical;
   line-height: 1.2;
-}
-
-.person-card {
-  width: 100%;
-  height: 100%;
-}
-
-.person-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.person-card .media-info {
-  padding: 10px, 8px;
 }
 
 .no-image-person img {

@@ -5,27 +5,39 @@
       (filterChange)="onFilterChange($event)"
     ></app-media-filter>
   </div>
+  
   <div class="main-content">
-    <div *ngIf="noResults && !loading" class="no-results">
+    <!-- ✅ Error state (using BaseMediaList error handling) -->
+    <div *ngIf="hasError" class="error-container">
+      <h2>{{ error }}</h2>
+      <p>Please try again or adjust your filters.</p>
+      <button class="retry-btn" (click)="retry()">Try Again</button>
+    </div>
+
+    <!-- ✅ Empty state (using BaseMediaList helper) -->
+    <div *ngIf="showEmptyState" class="no-results">
       <h2>No Results Found</h2>
       <p>Try adjusting your filters to find more TV shows.</p>
     </div>
 
-    <div *ngIf="!noResults" class="tv-shows-grid">
-      <app-media-card *ngFor="let show of filteredMedia" [media]="show">
+    <!-- ✅ TV shows grid (using BaseMediaList items consistently) -->
+    <div *ngIf="hasItems && !hasError" class="tv-shows-grid">
+      <app-media-card
+        *ngFor="let show of items; trackBy: trackByMediaId"
+        [media]="show"
+      >
       </app-media-card>
     </div>
 
-    <div
-      class="load-more-container"
-      *ngIf="showLoadMore && filteredMedia.length > 0 && !loading"
-    >
+    <!-- ✅ Load more button (using items consistently) -->
+    <div class="load-more-container" *ngIf="showLoadMore && !loading && !hasError">
       <button class="load-more-btn" (click)="loadMore()">Load More</button>
     </div>
 
+    <!-- ✅ Loading state -->
     <div class="loading-container" *ngIf="loading">
       <div class="loading-spinner"></div>
-      <p>Loading...</p>
+      <p>Loading popular TV shows...</p>
     </div>
   </div>
 </div>

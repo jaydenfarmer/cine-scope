@@ -4,7 +4,7 @@ import { MediaCardComponent } from '../../components/media-card/media-card.compo
 import { CommonModule } from '@angular/common';
 import { BaseMediaList } from '../base-media-list';
 import { MediaFilterComponent } from "../../components/media-filter/media-filter.component";
-import { Observable, Subject, takeUntil } from 'rxjs';
+import { Observable, Subject } from 'rxjs';
 import { Media, ApiResponse } from '../../shared/interfaces/media.interface';
 
 @Component({
@@ -26,41 +26,25 @@ export class TvAiringTodayComponent extends BaseMediaList implements OnDestroy {
     super(cdr);
   }
 
+  // ✅ Simplified fetchPage implementation
   fetchPage(page: number): Observable<ApiResponse<Media>> {
-    // If we have filters, use filtered API, otherwise use airing today
     if (this.currentFilters) {
       return this.tmdb.getFilteredMedia(this.currentFilters, page, 'tv');
     }
     return this.tmdb.getAiringTodayTvShows(page);
   }
 
-  onFilterChange(filters: any) {
+  // ✅ Simplified and safer filter handling
+  onFilterChange(filters: any): void {
     this.currentFilters = filters;
-    this.reset();
-    this.loading = true;
+    this.reset(); // ✅ Use BaseMediaList reset method
     
-    this.tmdb.getFilteredMedia(filters, 1, 'tv')
-      .pipe(takeUntil(this.destroy$))
-      .subscribe({
-        next: (response) => {
-          this.filteredMedia = response.results || [];
-          this.items = this.filteredMedia;
-          this.allMedia = this.filteredMedia;
-          this.noResults = this.filteredMedia.length === 0;
-          this.loading = false;
-          this.page = 2;
-          this.cdr.markForCheck();
-        },
-        error: (error) => {
-          console.error('TV Airing Today Filter error:', error);
-          this.loading = false;
-          this.noResults = true;
-          this.cdr.markForCheck();
-        }
-      });
+    // ✅ Let BaseMediaList handle the loading with fetchPage
+    this.loadMore();
   }
 
-  ngOnDestroy() {
+  // ✅ Cleanup
+  ngOnDestroy(): void {
     this.destroy$.next();
     this.destroy$.complete();
   }

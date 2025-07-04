@@ -29,6 +29,10 @@
         <span class="media-details-release">
           {{ media.release_date || media.first_air_date | date : "mediumDate" }}
         </span>
+        <!-- ✅ Add runtime here -->
+        <span *ngIf="getMediaRuntime(media)" class="media-details-runtime">
+          {{ getMediaRuntime(media) }}
+        </span>
         <span class="media-details-genres" *ngIf="media.genres">
           <ng-container *ngFor="let genre of media.genres; let last = last">
             {{ genre.name }}<span *ngIf="!last">, </span>
@@ -72,28 +76,16 @@
     </div>
   </div>
 
-  <div
-    *ngIf="youtubeTrailers$ | async as trailers"
-    class="media-details-trailers"
-  >
-    <h2 class="media-details-trailers-title">Trailers</h2>
-    <div class="media-details-trailer-list">
-      <div
-        *ngFor="let trailer of trailers"
-        class="media-details-trailer-thumb"
-        (click)="openSelectedTrailerModal(trailer.key)"
-        tabindex="0"
-        role="button"
-        aria-label="Play trailer"
-      >
-        <img
-          [src]="'https://img.youtube.com/vi/' + trailer.key + '/hqdefault.jpg'"
-          [alt]="trailer.name"
-          class="media-details-trailer-img"
-        />
-        <span class="media-details-trailer-play">▶</span>
-      </div>
-    </div>
+  <div *ngIf="trailerData$ | async as trailerData" class="media-details-trailers">
+    <h2 *ngIf="trailerData.length > 0" class="media-details-trailers-title">Trailers</h2>
+    <app-trailer-row
+      *ngIf="trailerData.length > 0; else noTrailers"
+      [trailerData]="trailerData"
+      (trailerClick)="onTrailerClick($event)"
+    ></app-trailer-row>
+    <ng-template #noTrailers>
+      <p><em>No trailers available.</em></p>
+    </ng-template>
   </div>
 </div>
 

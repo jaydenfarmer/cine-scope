@@ -32,73 +32,86 @@
   width: 100%;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  gap: 1.5rem;
 }
 
 .media-details-title {
-  font-size: 2.2rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: var(--background-accent);
-  letter-spacing: 1px;
+  font-size: 3rem;
+  font-weight: 900;
+  margin: 0;
+  color: #fff;
+  letter-spacing: -0.05em;
+  line-height: 0.9;
+  
+  @media (max-width: 768px) {
+    font-size: 2.5rem;
+  }
 }
 
 .media-details-meta {
   display: flex;
-  gap: 1.2rem;
-  align-items: center;
-  margin-bottom: 1.2rem;
-  font-size: 1.1rem;
-  color: #b0b0b0;
   flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 1.2rem;
 }
 
 .media-details-release,
-.media-details-genres,
-.media-details-rating {
-  background: #2e3448;
-  padding: 0.2rem 0.8rem;
-  border-radius: 1rem;
+.media-details-runtime,
+.media-details-genres {
+  background: none;
+  border: none;
+  padding: 0;
+  color: rgba(255, 255, 255, 0.7);
+  
+  &:not(:last-child):after {
+    content: "•";
+    margin-left: 0.5rem;
+    color: rgba(255, 255, 255, 0.4);
+  }
 }
 
 .media-details-rating {
-  background: var(--background-accent);
-  color: #fff;
+  background: none;
+  border: none;
+  padding: 0;
+  color: var(--background-accent);
   font-weight: 600;
+  margin-left: 0.5rem;
 }
 
 .media-details-actions {
   display: flex;
   gap: 1rem;
-  margin-bottom: 1.5rem;
+  align-items: center;
 }
 
 .media-action-btn {
-  background: #2e3448;
-  color: #fff;
-  border: none;
-  border-radius: 1.2rem;
-  padding: 0.5rem 1.2rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.2s;
-  font-weight: 500;
-}
-.media-action-btn:enabled:hover {
   background: var(--background-accent);
-  color: #fff;
-}
-.media-action-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
+  color: #000;
+  border: none;
+  border-radius: 50px;
+  padding: 0.75rem 2rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.1s ease;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  
+  &:hover {
+    transform: scale(1.05);
+    background: #ff8fab;
+  }
 }
 
 .media-details-overview {
-  font-size: 1.15rem;
-  line-height: 1.7;
-  color: #e0e0e0;
-  margin-bottom: 2rem;
-  margin-top: 1rem;
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+  max-width: 500px;
 }
 
 .media-details-cast-row {
@@ -142,7 +155,7 @@
 }
 
 .media-details-cast-card:hover {
-  transform: translateY(-2px) scale(1.03);
+  transform: translateY(-2px) scale(0.97);
 }
 
 .media-details-cast-card img,

@@ -3,11 +3,12 @@ import { ActivatedRoute, RouterModule, UrlSegment } from '@angular/router';
 import { TmdbService } from '../../services/tmdb.service';
 import { CommonModule } from '@angular/common';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
-import { map, Observable, switchMap } from 'rxjs';
+import { map, Observable, switchMap, combineLatest } from 'rxjs';
+import { TrailerRowComponent } from '../../components/trailer-row/trailer-row.component';
 
 @Component({
   selector: 'app-media-details',
-  imports: [CommonModule, RouterModule],
+  imports: [CommonModule, RouterModule, TrailerRowComponent],
   templateUrl: './media-details.component.html',
   styleUrl: './media-details.component.scss'
 })
@@ -17,6 +18,7 @@ export class MediaDetailsComponent implements OnInit {
   trailers$!: Observable<any[]>;
   cast$!: Observable<any[]>;
   youtubeTrailers$!: Observable<any[]>;
+  trailerData$!: Observable<any[]>;
   
   // Component state for modal and other features
   trendingMovies: any[] = [];
@@ -65,6 +67,33 @@ export class MediaDetailsComponent implements OnInit {
     this.youtubeTrailers$ = this.trailers$.pipe(
       map(trailers => trailers.filter(t => t.site === 'YouTube' && t.type === 'Trailer'))
     );
+
+    // ✅ Create TrailerRow compatible data
+    this.trailerData$ = combineLatest([this.media$, this.youtubeTrailers$]).pipe(
+      map(([media, trailers]) => {
+        if (!media || !trailers.length) return [];
+        
+        return [{
+          media: media,
+          trailers: trailers
+        }];
+      })
+    );
+  }
+
+  getMediaRuntime(media: any): string {
+    if (media?.runtime) {
+      const hours = Math.floor(media.runtime / 60);
+      const minutes = media.runtime % 60;
+      return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+    }
+    return '';
+  }
+
+  // ✅ Add trailer click handler for TrailerRow
+  onTrailerClick(event: {media: any, trailer: any}): void {
+    this.selectedTrailerUrl = this.getSafeUrl(event.trailer.key);
+    this.showTrailerModal = true;
   }
 
   getSafeUrl(key: string): SafeResourceUrl {

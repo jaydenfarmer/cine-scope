@@ -40,7 +40,6 @@
   font-weight: 900;
   margin: 0;
   color: #fff;
-  letter-spacing: -0.05em;
   line-height: 0.9;
   
   @media (max-width: 768px) {
@@ -202,7 +201,7 @@ body.dark-mode .media-details-cast-no-image {
 
 .movie-details-cast-name {
   font-size: 1.05rem;
-  font-weight: 600;
+  font-weight: 500;
   color: inherit;
   margin-bottom: 0.2rem;
 }

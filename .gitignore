@@ -40,6 +40,3 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
-
-# Environment files with sensitive data
-src/environments/environment.ts

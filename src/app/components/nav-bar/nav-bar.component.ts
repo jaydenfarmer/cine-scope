@@ -1,4 +1,12 @@
-import { Component, ChangeDetectionStrategy, ViewChild, ElementRef, Inject, PLATFORM_ID, HostListener } from '@angular/core';
+import {
+  Component,
+  ChangeDetectionStrategy,
+  ViewChild,
+  ElementRef,
+  Inject,
+  PLATFORM_ID,
+  HostListener,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
@@ -10,13 +18,14 @@ import { ThemeService } from '../../services/theme.service';
   imports: [FormsModule, CommonModule],
   templateUrl: './nav-bar.component.html',
   styleUrl: './nav-bar.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class NavBarComponent {
   // ✅ Keep your exact state variables
   menuOpen = false;
   searchExpanded = false;
   query = '';
+  openDropdown: string | null = null;
 
   @ViewChild('searchInput') searchInput?: ElementRef<HTMLInputElement>;
 
@@ -28,7 +37,9 @@ export class NavBarComponent {
 
   // ✅ Safe mobile detection
   get isMobile(): boolean {
-    return isPlatformBrowser(this.platformId) ? window.innerWidth <= 700 : false;
+    return isPlatformBrowser(this.platformId)
+      ? window.innerWidth <= 700
+      : false;
   }
 
   @HostListener('window:resize')
@@ -39,11 +50,33 @@ export class NavBarComponent {
     }
   }
 
+  // ✅ Add dropdown toggle method
+  toggleDropdown(dropdown: string, event?: Event): void {
+    if (event) {
+      event.stopPropagation();
+    }
+
+    if (this.isMobile) {
+      this.openDropdown = this.openDropdown === dropdown ? null : dropdown;
+    }
+  }
+
+  // ✅ Update navigateTo to close dropdown
+  navigateTo(path: string): void {
+    this.router.navigate(['/' + path]);
+    this.menuOpen = false;
+    this.openDropdown = null; // ✅ Close dropdown after navigation
+
+    if (isPlatformBrowser(this.platformId) && document.activeElement) {
+      (document.activeElement as HTMLElement).blur();
+    }
+  }
+
   // ✅ Keep your exact search expansion logic, just safer
   expandSearch(event: Event): void {
     event.preventDefault();
     this.searchExpanded = true;
-    
+
     setTimeout(() => {
       this.searchInput?.nativeElement?.focus();
     }, 0);
@@ -55,26 +88,17 @@ export class NavBarComponent {
     this.menuOpen = false;
   }
 
-  navigateTo(path: string): void {
-    this.router.navigate(['/' + path]);
-    this.menuOpen = false;
-    
-    if (isPlatformBrowser(this.platformId) && document.activeElement) {
-      (document.activeElement as HTMLElement).blur();
-    }
-  }
-
   // ✅ Keep your exact search logic, just add safety
   onSubmit(event: Event): void {
     event.preventDefault();
     const trimmed = this.query.trim();
-    
+
     if (trimmed) {
       this.router.navigate(['/search'], { queryParams: { search: trimmed } });
     } else {
       this.menuOpen = false;
     }
-    
+
     this.menuOpen = false;
     this.searchExpanded = false;
   }

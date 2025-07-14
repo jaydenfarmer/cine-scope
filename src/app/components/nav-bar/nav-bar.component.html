@@ -14,11 +14,17 @@
       &#9776;
     </button>
 
-    <!-- ✅ Keep your exact nav structure -->
+    <!-- ✅ Updated nav structure with mobile click support -->
     <div class="nav-links">
       <!-- Movies -->
-      <div class="nav-dropdown">
-        <span class="nav-link">Movies</span>
+      <div class="nav-dropdown" [class.mobile-open]="openDropdown === 'movies'">
+        <span 
+          class="nav-link" 
+          (click)="toggleDropdown('movies', $event)"
+        >
+          Movies
+          <span class="dropdown-arrow" *ngIf="isMobile">{{ openDropdown === 'movies' ? '▲' : '▼' }}</span>
+        </span>
         <div class="dropdown-menu">
           <button (click)="navigateTo('movies/popular')">Popular</button>
           <button (click)="navigateTo('movies/top-rated')">Top Rated</button>
@@ -27,8 +33,14 @@
       </div>
 
       <!-- TV Shows -->
-      <div class="nav-dropdown">
-        <span class="nav-link">TV Shows</span>
+      <div class="nav-dropdown" [class.mobile-open]="openDropdown === 'tv'">
+        <span 
+          class="nav-link" 
+          (click)="toggleDropdown('tv', $event)"
+        >
+          TV Shows
+          <span class="dropdown-arrow" *ngIf="isMobile">{{ openDropdown === 'tv' ? '▲' : '▼' }}</span>
+        </span>
         <div class="dropdown-menu">
           <button (click)="navigateTo('tv/popular')">Popular</button>
           <button (click)="navigateTo('tv/top-rated')">Top Rated</button>
@@ -37,8 +49,14 @@
       </div>
 
       <!-- People -->
-      <div class="nav-dropdown">
-        <span class="nav-link">People</span>
+      <div class="nav-dropdown" [class.mobile-open]="openDropdown === 'people'">
+        <span 
+          class="nav-link" 
+          (click)="toggleDropdown('people', $event)"
+        >
+          People
+          <span class="dropdown-arrow" *ngIf="isMobile">{{ openDropdown === 'people' ? '▲' : '▼' }}</span>
+        </span>
         <div class="dropdown-menu">
           <button (click)="navigateTo('people/popular')">Popular People</button>
         </div>
@@ -65,10 +83,9 @@
       </div>
     </div>
 
-    <!-- ✅ Keep your exact spacer -->
+    <!-- ✅ Keep your exact spacer and search bar -->
     <div class="spacer"></div>
 
-    <!-- ✅ Keep your exact search bar -->
     <form
       class="search-bar"
       (submit)="onSubmit($event)"

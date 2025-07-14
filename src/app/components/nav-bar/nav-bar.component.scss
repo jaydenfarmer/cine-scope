@@ -272,12 +272,18 @@
   }
 }
 
+.dropdown-arrow {
+  margin-left: 0.5rem;
+  font-size: 0.8rem;
+  transition: transform 0.2s;
+}
+
 // ✅ Keep your exact mobile styles
 @media (max-width: 850px) {
   .nav-links {
     display: none;
     flex-direction: column;
-    width: 100%;
+    width: 100vw;
     background: #23283a;
     position: absolute;
     left: 0;

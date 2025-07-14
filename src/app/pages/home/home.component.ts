@@ -1,4 +1,10 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
@@ -17,7 +23,12 @@ interface TrailerData {
 }
 
 type TrendingType = 'movie' | 'tv';
-type TrailersCategory = 'popular' | 'streaming' | 'on_tv' | 'for_rent' | 'in_theaters';
+type TrailersCategory =
+  | 'popular'
+  | 'streaming'
+  | 'on_tv'
+  | 'for_rent'
+  | 'in_theaters';
 type PopularCategory = 'streaming' | 'on_tv' | 'for_rent' | 'in_theaters';
 type FreeType = 'movie' | 'tv';
 
@@ -27,7 +38,7 @@ type FreeType = 'movie' | 'tv';
   imports: [CommonModule, FormsModule, MediaRowComponent, TrailerRowComponent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class HomeComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
@@ -54,8 +65,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   selectedTrailerUrl: SafeResourceUrl | null = null;
 
   // ✅ Define option arrays for template
-  readonly trailersOptions: TrailersCategory[] = ['popular', 'streaming', 'on_tv', 'for_rent', 'in_theaters'];
-  readonly popularOptions: PopularCategory[] = ['streaming', 'on_tv', 'for_rent', 'in_theaters'];
+  readonly trailersOptions: TrailersCategory[] = [
+    'popular',
+    'streaming',
+    'on_tv',
+    'for_rent',
+    'in_theaters',
+  ];
+  readonly popularOptions: PopularCategory[] = [
+    'streaming',
+    'on_tv',
+    'for_rent',
+    'in_theaters',
+  ];
 
   constructor(
     private tmdb: TmdbService,
@@ -85,15 +107,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.isLoadingTrending) return;
 
     this.isLoadingTrending = true;
-    
-    const serviceCall = this.trendingType === 'movie' 
-      ? this.tmdb.getTrendingMovies() 
-      : this.tmdb.getTrendingTvShows();
+
+    const serviceCall =
+      this.trendingType === 'movie'
+        ? this.tmdb.getTrendingMovies()
+        : this.tmdb.getTrendingTvShows();
 
     serviceCall
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Failed to fetch trending:', error);
           return of({ results: [] });
         }),
@@ -102,7 +125,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.trendingItems = Array.isArray(data.results) ? data.results : [];
       });
   }
@@ -112,11 +135,12 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.isLoadingTrailers) return;
 
     this.isLoadingTrailers = true;
-    
-    this.tmdb.getLatestTrailers(this.trailersCategory)
+
+    this.tmdb
+      .getLatestTrailers(this.trailersCategory)
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Failed to fetch latest trailers:', error);
           return of({ results: [] });
         }),
@@ -125,7 +149,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         if (!data.results?.length) {
           this.latestTrailersData = [];
           return;
@@ -138,15 +162,18 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // ✅ Safer batch trailer fetching
   private fetchTrailersForMedia(mediaItems: Media[]): void {
-    const trailerRequests = mediaItems.map(media => {
+    const trailerRequests = mediaItems.map((media) => {
       const hasAirDate = Boolean(media.first_air_date);
-      const serviceCall = hasAirDate 
-        ? this.tmdb.getTvTrailers(media.id) 
+      const serviceCall = hasAirDate
+        ? this.tmdb.getTvTrailers(media.id)
         : this.tmdb.getMovieTrailers(media.id);
 
       return serviceCall.pipe(
-        catchError(error => {
-          console.warn(`Failed to fetch trailers for media ${media.id}:`, error);
+        catchError((error) => {
+          console.warn(
+            `Failed to fetch trailers for media ${media.id}:`,
+            error
+          );
           return of({ results: [] });
         })
       );
@@ -154,31 +181,40 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     forkJoin(trailerRequests)
       .pipe(takeUntil(this.destroy$))
-      .subscribe(trailersResults => {
-        this.latestTrailersData = this.processTrailerResults(mediaItems, trailersResults);
+      .subscribe((trailersResults) => {
+        this.latestTrailersData = this.processTrailerResults(
+          mediaItems,
+          trailersResults
+        );
         this.cdr.markForCheck();
       });
   }
 
   // ✅ Safe trailer processing
-  private processTrailerResults(mediaItems: Media[], trailersResults: any[]): TrailerData[] {
+  private processTrailerResults(
+    mediaItems: Media[],
+    trailersResults: any[]
+  ): TrailerData[] {
     return mediaItems
       .map((media, index) => {
         const trailerData = trailersResults[index];
         const results = trailerData?.results || [];
-        
-        const validTrailers = results.filter((trailer: Trailer) => 
-          trailer.site === 'YouTube' && 
-          trailer.key &&
-          ['Trailer', 'Teaser', 'Clip'].includes(trailer.type)
-        ).slice(0, 1);
+
+        const validTrailers = results
+          .filter(
+            (trailer: Trailer) =>
+              trailer.site === 'YouTube' &&
+              trailer.key &&
+              ['Trailer', 'Teaser', 'Clip'].includes(trailer.type)
+          )
+          .slice(0, 1);
 
         return {
           media,
-          trailers: validTrailers
+          trailers: validTrailers,
         };
       })
-      .filter(item => item.trailers.length > 0);
+      .filter((item) => item.trailers.length > 0);
   }
 
   // ✅ Safer popular content fetch
@@ -186,13 +222,13 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.isLoadingPopular) return;
 
     this.isLoadingPopular = true;
-    
+
     const serviceCall = this.getPopularServiceCall();
-    
+
     serviceCall
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Failed to fetch popular content:', error);
           return of({ results: [] });
         }),
@@ -201,7 +237,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         const results = Array.isArray(data.results) ? data.results : [];
         this.whatsPopular = this.shuffleArray([...results]);
       });
@@ -209,12 +245,17 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // ✅ Safe service call selection
   private getPopularServiceCall() {
-    switch(this.popularCategory) {
-      case 'streaming': return this.tmdb.getTrendingMovies();
-      case 'on_tv': return this.tmdb.getPopularTvShows();
-      case 'for_rent': return this.tmdb.getTopRatedMovies();
-      case 'in_theaters': return this.tmdb.getUpcomingMovies();
-      default: return this.tmdb.getPopularMovies();
+    switch (this.popularCategory) {
+      case 'streaming':
+        return this.tmdb.getTrendingMovies();
+      case 'on_tv':
+        return this.tmdb.getPopularTvShows();
+      case 'for_rent':
+        return this.tmdb.getTopRatedMovies();
+      case 'in_theaters':
+        return this.tmdb.getUpcomingMovies();
+      default:
+        return this.tmdb.getPopularMovies();
     }
   }
 
@@ -223,15 +264,16 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (this.isLoadingFree) return;
 
     this.isLoadingFree = true;
-    
-    const serviceCall = this.freeType === 'movie' 
-      ? this.tmdb.getPopularMovies() 
-      : this.tmdb.getPopularTvShows();
+
+    const serviceCall =
+      this.freeType === 'movie'
+        ? this.tmdb.getPopularMovies()
+        : this.tmdb.getPopularTvShows();
 
     serviceCall
       .pipe(
         takeUntil(this.destroy$),
-        catchError(error => {
+        catchError((error) => {
           console.error('Failed to fetch free content:', error);
           return of({ results: [] });
         }),
@@ -240,7 +282,7 @@ export class HomeComponent implements OnInit, OnDestroy {
           this.cdr.markForCheck();
         })
       )
-      .subscribe(data => {
+      .subscribe((data) => {
         this.freeToWatch = Array.isArray(data.results) ? data.results : [];
       });
   }
@@ -248,7 +290,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   // ✅ Safe array shuffling
   private shuffleArray<T>(array: T[]): T[] {
     if (!Array.isArray(array) || array.length <= 1) return array;
-    
+
     for (let i = array.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
@@ -282,7 +324,7 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   // ✅ Safe trailer modal handling
-  onTrailerClick(event: {media: Media, trailer: Trailer}): void {
+  onTrailerClick(event: { media: Media; trailer: Trailer }): void {
     if (!event?.media || !event?.trailer?.key) {
       console.warn('Invalid trailer click event:', event);
       return;
@@ -290,7 +332,9 @@ export class HomeComponent implements OnInit, OnDestroy {
 
     try {
       const safeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(
-        `https://www.youtube.com/embed/${encodeURIComponent(event.trailer.key)}?autoplay=1`
+        `https://www.youtube.com/embed/${encodeURIComponent(
+          event.trailer.key
+        )}?autoplay=1`
       );
       this.selectedTrailerUrl = safeUrl;
       this.showTrailerModal = true;
@@ -312,29 +356,69 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   getLoadingState(): boolean {
-    return this.isLoadingTrending || this.isLoadingTrailers || 
-           this.isLoadingPopular || this.isLoadingFree;
+    return (
+      this.isLoadingTrending ||
+      this.isLoadingTrailers ||
+      this.isLoadingPopular ||
+      this.isLoadingFree
+    );
   }
 
   // ✅ Label helper methods
   getTrailersCategoryLabel(category: TrailersCategory): string {
     const labels: Record<TrailersCategory, string> = {
-      'popular': 'Popular',
-      'streaming': 'Streaming', 
-      'on_tv': 'On TV',
-      'for_rent': 'For Rent',
-      'in_theaters': 'In Theaters'
+      popular: 'Popular',
+      streaming: 'Streaming',
+      on_tv: 'On TV',
+      for_rent: 'For Rent',
+      in_theaters: 'In Theaters',
     };
     return labels[category];
   }
 
   getPopularCategoryLabel(category: PopularCategory): string {
     const labels: Record<PopularCategory, string> = {
-      'streaming': 'Streaming',
-      'on_tv': 'On TV', 
-      'for_rent': 'For Rent',
-      'in_theaters': 'In Theaters'
+      streaming: 'Streaming',
+      on_tv: 'On TV',
+      for_rent: 'For Rent',
+      in_theaters: 'In Theaters',
     };
     return labels[category];
+  }
+
+  setTrendingTypeFromDropdown(type: TrendingType): void {
+    console.log('Mobile dropdown changing trending type to:', type); // Debug log
+    if (type === this.trendingType) return;
+
+    this.trendingType = type;
+    this.fetchTrending();
+    this.cdr.detectChanges(); // ✅ Force change detection
+  }
+
+  setTrailersCategoryFromDropdown(category: TrailersCategory): void {
+    console.log('Mobile dropdown changing trailers category to:', category); // Debug log
+    if (category === this.trailersCategory) return;
+
+    this.trailersCategory = category;
+    this.fetchLatestTrailers();
+    this.cdr.detectChanges(); // ✅ Force change detection
+  }
+
+  setPopularCategoryFromDropdown(category: PopularCategory): void {
+    console.log('Mobile dropdown changing popular category to:', category); // Debug log
+    if (category === this.popularCategory) return;
+
+    this.popularCategory = category;
+    this.fetchWhatsPopular();
+    this.cdr.detectChanges(); // ✅ Force change detection
+  }
+
+  setFreeTypeFromDropdown(type: FreeType): void {
+    console.log('Mobile dropdown changing free type to:', type); // Debug log
+    if (type === this.freeType) return;
+
+    this.freeType = type;
+    this.fetchFreeToWatch();
+    this.cdr.detectChanges(); // ✅ Force change detection
   }
 }

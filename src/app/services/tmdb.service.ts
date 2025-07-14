@@ -79,7 +79,18 @@ export class TmdbService {
     'TV-MA': 'TV-MA',
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    console.log('🔑 API Key loaded:', this.apiKey ? 'YES' : 'NO');
+    console.log('🔑 API Key length:', this.apiKey?.length || 0);
+    console.log(
+      '🌍 Environment:',
+      environment.production ? 'production' : 'development'
+    );
+    console.log(
+      '🔑 Environment API Key:',
+      environment.tmdbApiKey ? 'EXISTS' : 'MISSING'
+    );
+  }
 
   private getApiKey(): string {
     // Try environment first, then fallback to global process

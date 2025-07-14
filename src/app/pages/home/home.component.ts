@@ -387,7 +387,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setTrendingTypeFromDropdown(type: TrendingType): void {
-    console.log('Mobile dropdown changing trending type to:', type); // Debug log
     if (type === this.trendingType) return;
 
     this.trendingType = type;
@@ -396,7 +395,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setTrailersCategoryFromDropdown(category: TrailersCategory): void {
-    console.log('Mobile dropdown changing trailers category to:', category); // Debug log
     if (category === this.trailersCategory) return;
 
     this.trailersCategory = category;
@@ -405,7 +403,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setPopularCategoryFromDropdown(category: PopularCategory): void {
-    console.log('Mobile dropdown changing popular category to:', category); // Debug log
     if (category === this.popularCategory) return;
 
     this.popularCategory = category;
@@ -414,7 +411,6 @@ export class HomeComponent implements OnInit, OnDestroy {
   }
 
   setFreeTypeFromDropdown(type: FreeType): void {
-    console.log('Mobile dropdown changing free type to:', type); // Debug log
     if (type === this.freeType) return;
 
     this.freeType = type;

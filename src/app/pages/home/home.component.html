@@ -80,8 +80,8 @@
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
-          [(ngModel)]="trailersCategory"
-          (ngModelChange)="setTrailersCategory($event)"
+          [value]="trailersCategory"
+          (change)="setTrailersCategoryFromDropdown($any($event.target).value)"
           class="dropdown-select"
           [attr.aria-label]="'Select trailers category'"
         >
@@ -132,8 +132,8 @@
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
-          [(ngModel)]="popularCategory"
-          (ngModelChange)="setPopularCategory($event)"
+          [value]="popularCategory"
+          (change)="setPopularCategoryFromDropdown($any($event.target).value)"
           class="dropdown-select"
           [attr.aria-label]="'Select popular category'"
         >
@@ -188,8 +188,8 @@
       <!-- Mobile Dropdown -->
       <div class="section-dropdown mobile-only">
         <select
-          [(ngModel)]="freeType"
-          (ngModelChange)="setFreeType($event)"
+          [value]="freeType"
+          (change)="setFreeTypeFromDropdown($any($event.target).value)"
           class="dropdown-select"
           [attr.aria-label]="'Select free content type'"
         >

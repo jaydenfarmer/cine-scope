@@ -46,19 +46,19 @@ export class HomeComponent implements OnInit, OnDestroy {
   // ✅ Properly typed properties with defaults
   trendingItems: Media[] = [];
   trendingType: TrendingType = 'movie';
-  isLoadingTrending = false;
+  isLoadingTrending = true; // Start with loading on
 
   latestTrailersData: TrailerData[] = [];
   trailersCategory: TrailersCategory = 'popular';
-  isLoadingTrailers = false;
+  isLoadingTrailers = true; // Start with loading on
 
   whatsPopular: Media[] = [];
   popularCategory: PopularCategory = 'streaming';
-  isLoadingPopular = false;
+  isLoadingPopular = true; // Start with loading on
 
   freeToWatch: Media[] = [];
   freeType: FreeType = 'movie';
-  isLoadingFree = false;
+  isLoadingFree = true; // Start with loading on
 
   // Modal state
   showTrailerModal = false;
@@ -78,6 +78,9 @@ export class HomeComponent implements OnInit, OnDestroy {
     'for_rent',
     'in_theaters',
   ];
+
+  // ✅ Add skeleton items for loading animation
+  readonly skeletonItems = Array(6).fill(0);
 
   constructor(
     private tmdb: TmdbService,
@@ -102,12 +105,7 @@ export class HomeComponent implements OnInit, OnDestroy {
     this.fetchFreeToWatch();
   }
 
-  // ✅ Safer trending fetch
   fetchTrending(): void {
-    if (this.isLoadingTrending) return;
-
-    this.isLoadingTrending = true;
-
     const serviceCall =
       this.trendingType === 'movie'
         ? this.tmdb.getTrendingMovies()
@@ -130,12 +128,38 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
 
+  // ✅ Safer trending fetch
+  // fetchTrending(): void {
+  //   const serviceCall =
+  //     this.trendingType === 'movie'
+  //       ? this.tmdb.getTrendingMovies()
+  //       : this.tmdb.getTrendingTvShows();
+
+  //   const start = Date.now();
+
+  //   serviceCall
+  //     .pipe(
+  //       takeUntil(this.destroy$),
+  //       catchError((error) => {
+  //         console.error('Failed to fetch trending:', error);
+  //         return of({ results: [] });
+  //       }),
+  //       finalize(() => {
+  //         const elapsed = Date.now() - start;
+  //         const delay = Math.max(0, 200 - elapsed);
+  //         setTimeout(() => {
+  //           this.isLoadingTrending = false;
+  //           this.cdr.markForCheck();
+  //         }, delay);
+  //       })
+  //     )
+  //     .subscribe((data) => {
+  //       this.trendingItems = Array.isArray(data.results) ? data.results : [];
+  //     });
+  // }
+
   // ✅ Much safer trailer fetching
   fetchLatestTrailers(): void {
-    if (this.isLoadingTrailers) return;
-
-    this.isLoadingTrailers = true;
-
     this.tmdb
       .getLatestTrailers(this.trailersCategory)
       .pipe(
@@ -219,10 +243,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // ✅ Safer popular content fetch
   fetchWhatsPopular(): void {
-    if (this.isLoadingPopular) return;
-
-    this.isLoadingPopular = true;
-
     const serviceCall = this.getPopularServiceCall();
 
     serviceCall
@@ -261,10 +281,6 @@ export class HomeComponent implements OnInit, OnDestroy {
 
   // ✅ Safer free content fetch
   fetchFreeToWatch(): void {
-    if (this.isLoadingFree) return;
-
-    this.isLoadingFree = true;
-
     const serviceCall =
       this.freeType === 'movie'
         ? this.tmdb.getPopularMovies()
@@ -302,24 +318,32 @@ export class HomeComponent implements OnInit, OnDestroy {
   setTrendingType(type: TrendingType): void {
     if (type === this.trendingType) return;
     this.trendingType = type;
+    this.isLoadingTrending = true;
+    this.cdr.markForCheck();
     this.fetchTrending();
   }
 
   setTrailersCategory(category: TrailersCategory): void {
     if (category === this.trailersCategory) return;
     this.trailersCategory = category;
+    this.isLoadingTrailers = true;
+    this.cdr.markForCheck();
     this.fetchLatestTrailers();
   }
 
   setPopularCategory(category: PopularCategory): void {
     if (category === this.popularCategory) return;
     this.popularCategory = category;
+    this.isLoadingPopular = true;
+    this.cdr.markForCheck();
     this.fetchWhatsPopular();
   }
 
   setFreeType(type: FreeType): void {
     if (type === this.freeType) return;
     this.freeType = type;
+    this.isLoadingFree = true;
+    this.cdr.markForCheck();
     this.fetchFreeToWatch();
   }
 
@@ -390,31 +414,35 @@ export class HomeComponent implements OnInit, OnDestroy {
     if (type === this.trendingType) return;
 
     this.trendingType = type;
+    this.isLoadingTrending = true;
+    this.cdr.markForCheck();
     this.fetchTrending();
-    this.cdr.detectChanges(); // ✅ Force change detection
   }
 
   setTrailersCategoryFromDropdown(category: TrailersCategory): void {
     if (category === this.trailersCategory) return;
 
     this.trailersCategory = category;
+    this.isLoadingTrailers = true;
+    this.cdr.markForCheck();
     this.fetchLatestTrailers();
-    this.cdr.detectChanges(); // ✅ Force change detection
   }
 
   setPopularCategoryFromDropdown(category: PopularCategory): void {
     if (category === this.popularCategory) return;
 
     this.popularCategory = category;
+    this.isLoadingPopular = true;
+    this.cdr.markForCheck();
     this.fetchWhatsPopular();
-    this.cdr.detectChanges(); // ✅ Force change detection
   }
 
   setFreeTypeFromDropdown(type: FreeType): void {
     if (type === this.freeType) return;
 
     this.freeType = type;
+    this.isLoadingFree = true;
+    this.cdr.markForCheck();
     this.fetchFreeToWatch();
-    this.cdr.detectChanges(); // ✅ Force change detection
   }
 }

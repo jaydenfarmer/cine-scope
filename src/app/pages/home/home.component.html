@@ -42,20 +42,30 @@
       </div>
     </div>
 
-    <!-- ✅ Content OUTSIDE section-header -->
-    <div *ngIf="isLoadingTrending" class="loading-state">
-      Loading trending content...
-    </div>
-    <app-media-row
-      *ngIf="!isLoadingTrending && hasData(trendingItems)"
-      [items]="trendingItems"
-      [mediaType]="trendingType"
-    ></app-media-row>
-    <div
-      *ngIf="!isLoadingTrending && !hasData(trendingItems)"
-      class="no-content"
-    >
-      No trending content available.
+    <!-- ✅ Content Container with Fixed Height -->
+    <div class="content-container" [class.loading]="isLoadingTrending">
+      <!-- Loading Animation -->
+      <div *ngIf="isLoadingTrending" class="loading-animation">
+        <div class="skeleton-row">
+          <div class="skeleton-item" *ngFor="let item of skeletonItems"></div>
+        </div>
+      </div>
+
+      <!-- Actual Content -->
+      <app-media-row
+        *ngIf="!isLoadingTrending && hasData(trendingItems)"
+        [items]="trendingItems"
+        [mediaType]="trendingType"
+        class="media-content"
+      ></app-media-row>
+
+      <!-- No Content -->
+      <div
+        *ngIf="!isLoadingTrending && !hasData(trendingItems)"
+        class="no-content"
+      >
+        No trending content available.
+      </div>
     </div>
   </div>
 
@@ -146,16 +156,23 @@
     </div>
 
     <!-- ✅ Content OUTSIDE section-header -->
-    <div *ngIf="isLoadingPopular" class="loading-state">
-      Loading popular content...
-    </div>
-    <app-media-row
-      *ngIf="!isLoadingPopular && hasData(whatsPopular)"
-      [items]="whatsPopular"
-      [mediaType]="'movie'"
-    ></app-media-row>
-    <div *ngIf="!isLoadingPopular && !hasData(whatsPopular)" class="no-content">
-      No popular content available.
+    <div class="content-container" [class.loading]="isLoadingPopular">
+      <div *ngIf="isLoadingPopular" class="loading-animation">
+        <div class="skeleton-row">
+          <div class="skeleton-item" *ngFor="let item of skeletonItems"></div>
+        </div>
+      </div>
+      <app-media-row
+        *ngIf="!isLoadingPopular && hasData(whatsPopular)"
+        [items]="whatsPopular"
+        [mediaType]="'movie'"
+      ></app-media-row>
+      <div
+        *ngIf="!isLoadingPopular && !hasData(whatsPopular)"
+        class="no-content"
+      >
+        No popular content available.
+      </div>
     </div>
   </div>
 
@@ -200,16 +217,20 @@
     </div>
 
     <!-- ✅ Content OUTSIDE section-header -->
-    <div *ngIf="isLoadingFree" class="loading-state">
-      Loading free content...
-    </div>
-    <app-media-row
-      *ngIf="!isLoadingFree && hasData(freeToWatch)"
-      [items]="freeToWatch"
-      [mediaType]="freeType"
-    ></app-media-row>
-    <div *ngIf="!isLoadingFree && !hasData(freeToWatch)" class="no-content">
-      No free content available.
+    <div class="content-container" [class.loading]="isLoadingFree">
+      <div *ngIf="isLoadingFree" class="loading-animation">
+        <div class="skeleton-row">
+          <div class="skeleton-item" *ngFor="let item of skeletonItems"></div>
+        </div>
+      </div>
+      <app-media-row
+        *ngIf="!isLoadingFree && hasData(freeToWatch)"
+        [items]="freeToWatch"
+        [mediaType]="freeType"
+      ></app-media-row>
+      <div *ngIf="!isLoadingFree && !hasData(freeToWatch)" class="no-content">
+        No free content available.
+      </div>
     </div>
   </div>
 

@@ -1,19 +1,18 @@
 <a [routerLink]="getRouterLink()" class="people-card-link">
   <div class="people-card" [class.no-image]="!hasImage()">
-    <!-- ✅ Keep your exact image structure -->
     <div class="person-image">
       <img
+        *ngIf="hasImage()"
         [src]="getImageUrl()"
         [alt]="getPersonName()"
         loading="lazy"
-        onerror="this.style.display='none'"
+        onerror="this.onerror=null;this.src='/people-no-image.svg'"
       />
+      <div *ngIf="!hasImage()" class="person-no-image"></div>
     </div>
 
-    <!-- ✅ Keep your exact info structure -->
     <div class="person-info">
       <h3 class="person-name">{{ getPersonName() }}</h3>
-
       <div class="known-for" *ngIf="hasKnownFor()">
         <span class="known-for-label">Known for:</span>
         <p class="known-for-text">{{ getKnownForText() }}</p>

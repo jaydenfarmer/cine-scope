@@ -27,36 +27,31 @@
   width: 100%;
   aspect-ratio: 2/3;
   flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img,
+  .person-no-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   img {
     width: 100%;
     height: 100%;
     object-fit: cover;
   }
+}
 
-  .no-image-placeholder {
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(135deg, #2a2a2a 0%, #3a3a3a 100%);
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    color: rgba(255, 255, 255, 0.6);
-
-    .person-icon {
-      width: 48px;
-      height: 48px;
-      margin-bottom: 8px;
-      opacity: 0.8;
-    }
-
-    .no-image-text {
-      font-size: 0.85rem;
-      font-weight: 500;
-      text-align: center;
-    }
-  }
+.person-no-image {
+  background: #e0e0e0;
+  border-radius: 6px;
+  background-image: url("/people-no-image.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 60% 60%;
 }
 
 .person-info {

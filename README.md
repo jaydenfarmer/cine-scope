@@ -1,59 +1,99 @@
 # MovieMatch
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.12.
+MovieMatch is a modern Angular web app for discovering trending, popular, and free-to-watch movies and TV shows using the TMDB API. It features responsive design, animated skeleton loading cards, category filtering, and seamless mobile navigation for an engaging user experience.
 
-## Development server
+## Features
 
-To start a local development server, run:
+- 🔥 **Trending, Popular, and Free-to-Watch Sections**  
+  Browse movies and TV shows by what's trending, popular, or available to watch for free.
+
+- ⚡ **Skeleton Loading Animations**  
+  Smooth skeleton cards prevent layout shift and provide instant feedback while data loads.
+
+- 📱 **Responsive & Mobile-Friendly**  
+  Adaptive layouts, dropdowns, and a hamburger menu ensure a great experience on any device.
+
+- 🖼️ **Image Fallbacks**  
+  If a movie, show, or person has no image, a clear fallback is shown to keep the UI consistent.
+
+- 🚀 **Fast & Performant**  
+  Uses Angular’s OnPush change detection and explicit UI updates for optimal performance.
+
+- 🛠️ **Modular & Extensible**  
+  All API logic is in a dedicated service, and UI components are reusable and easy to extend.
+
+## Getting Started
+
+### Prerequisites
+
+- [Node.js](https://nodejs.org/) (v18 or higher recommended)
+- [Angular CLI](https://angular.dev/tools/cli)
+
+### Installation
+
+1. **Clone the repository:**
+
+   ```bash
+   git clone https://github.com/yourusername/movie-match.git
+   cd movie-match
+   ```
+
+2. **Install dependencies:**
+
+   ```bash
+   npm install
+   ```
+
+3. **TMDB API Key:**
+   - Create a `.env` file or set the `NG_APP_TMDB_API_KEY` environment variable with your TMDB API key.
+   - Example:
+     ```
+     NG_APP_TMDB_API_KEY=your_tmdb_api_key_here
+     ```
+
+### Development
+
+Start the local development server:
 
 ```bash
 ng serve
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+Visit [http://localhost:4200/](http://localhost:4200/) in your browser.
 
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Building for Production
 
 ```bash
 ng build
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+The optimized build will be in the `dist/` directory.
 
-## Running unit tests
+### Running Tests
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+- **Unit tests:**
+  ```bash
+  ng test
+  ```
+- **End-to-end tests:**
+  ```bash
+  ng e2e
+  ```
 
-```bash
-ng test
-```
+## Project Structure
 
-## Running end-to-end tests
+- `src/app/components/` – UI components (media rows, people cards, nav bar, etc.)
+- `src/app/services/` – API service for TMDB
+- `src/assets/` or `public/` – Static images and fallback assets
 
-For end-to-end (e2e) testing, run:
+## Contributing
 
-```bash
-ng e2e
-```
+Pull requests are welcome! For major changes, please open an issue first to discuss what you’d like to change.
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## License
 
-## Additional Resources
+[MIT](LICENSE)
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+---
+
+**MovieMatch** – Discover your next favorite movie or show!

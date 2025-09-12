@@ -1,6 +1,6 @@
 <div class="home-sections">
   <!-- ✅ Trending Section -->
-  <div class="media-section">
+  <div class="media-section" data-cy="trending-section">
     <div class="section-header">
       <span class="section-label">Trending</span>
 
@@ -10,6 +10,7 @@
           class="switch-option"
           [class.active]="trendingType === 'movie'"
           (click)="setTrendingType('movie')"
+          data-cy="trending-movies-btn"
           [attr.aria-pressed]="trendingType === 'movie'"
         >
           Movies
@@ -22,6 +23,7 @@
           class="switch-option"
           [class.active]="trendingType === 'tv'"
           (click)="setTrendingType('tv')"
+          data-cy="trending-tv-btn"
           [attr.aria-pressed]="trendingType === 'tv'"
         >
           Shows
@@ -56,6 +58,7 @@
         *ngIf="!isLoadingTrending && hasData(trendingItems)"
         [items]="trendingItems"
         [mediaType]="trendingType"
+        data-cy="trending-media-row"
         class="media-content"
       ></app-media-row>
 
@@ -111,7 +114,9 @@
     <app-trailer-row
       *ngIf="!isLoadingTrailers && hasData(latestTrailersData)"
       [trailerData]="latestTrailersData"
+      data-cy="trailer-row"
       (trailerClick)="onTrailerClick($event)"
+      (mediaClick)="onMediaClick($event)"
     ></app-trailer-row>
     <div
       *ngIf="!isLoadingTrailers && !hasData(latestTrailersData)"
@@ -238,6 +243,7 @@
   <div
     *ngIf="showTrailerModal"
     class="trailer-modal-backdrop"
+    data-cy="trailer-modal"
     (click)="closeTrailerModal()"
     [attr.aria-label]="'Trailer modal'"
     role="dialog"
@@ -247,6 +253,7 @@
       <button
         class="trailer-modal-close"
         (click)="closeTrailerModal()"
+        data-cy="trailer-modal-close"
         [attr.aria-label]="'Close trailer modal'"
       >
         ✕

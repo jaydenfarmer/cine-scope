@@ -5,6 +5,7 @@
         *ngFor="let trailer of item.trailers; trackBy: trackByTrailer"
         [media]="item.media"
         [trailer]="trailer"
+        (mediaClick)="onMediaCardClick($event)"
         (trailerClick)="onTrailerClick($event)"
       >
       </app-trailer-card>

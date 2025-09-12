@@ -14,21 +14,24 @@
       <!-- ✅ Enhanced birth/death date display -->
       <div *ngIf="person.birthday">
         <ng-container *ngIf="person.deathday; else stillAlive">
-          Born: {{ person.birthday | date }} - Died: {{ person.deathday | date }}
-          <br><span class="age-info">(Age: {{ getAgeAtDeath(person.birthday, person.deathday) }})</span>
+          Born: {{ person.birthday | date }} - Died:
+          {{ person.deathday | date }} <br /><span class="age-info"
+            >(Age: {{ getAgeAtDeath(person.birthday, person.deathday) }})</span
+          >
         </ng-container>
         <ng-template #stillAlive>
-          Born: {{ person.birthday | date }}
-          <br><span class="age-info">(Age: {{ getAge(person.birthday) }})</span>
+          Born: {{ person.birthday | date }} <br /><span class="age-info"
+            >(Age: {{ getAge(person.birthday) }})</span
+          >
         </ng-template>
       </div>
-      
+
       <div *ngIf="person.place_of_birth">
         Place of Birth: {{ person.place_of_birth }}
       </div>
     </div>
   </div>
-  
+
   <div class="person-details-info">
     <h1>{{ person.name }}</h1>
     <h2>Biography</h2>
@@ -51,11 +54,11 @@
       </ng-container>
     </ng-container>
     <ng-template #noBio><em>No biography available.</em></ng-template>
-    
+
     <h2>Known For</h2>
     <app-known-for-row
       *ngIf="knownFor$ | async as knownFor"
-      [items]="knownFor"
+      [items]="getSortedKnownFor(knownFor)"
     ></app-known-for-row>
   </div>
 </div>

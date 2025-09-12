@@ -1,4 +1,10 @@
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  Component,
+  Input,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { API_CONFIG } from '../../shared/constants/api.constants';
@@ -10,12 +16,16 @@ import { Media, Trailer } from '../../shared/interfaces/media.interface';
   imports: [CommonModule],
   templateUrl: './trailer-card.component.html',
   styleUrls: ['./trailer-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TrailerCardComponent {
   @Input() media!: Media;
   @Input() trailer!: Trailer;
-  @Output() trailerClick = new EventEmitter<{media: Media, trailer: Trailer}>();
+  @Output() mediaClick = new EventEmitter<Media>();
+  @Output() trailerClick = new EventEmitter<{
+    media: Media;
+    trailer: Trailer;
+  }>();
 
   showFallback = false;
 
@@ -49,35 +59,35 @@ export class TrailerCardComponent {
       this.showFallback = true;
       return '';
     }
-    return `${API_CONFIG.YOUTUBE_THUMBNAIL_URL}/${encodeURIComponent(key)}/hqdefault.jpg`;
+    return `${API_CONFIG.YOUTUBE_THUMBNAIL_URL}/${encodeURIComponent(
+      key
+    )}/hqdefault.jpg`;
   }
 
   // ✅ Safe click handlers
   onTrailerClick(): void {
     if (!this.media || !this.trailer) return;
-    this.trailerClick.emit({media: this.media, trailer: this.trailer});
+    this.trailerClick.emit({ media: this.media, trailer: this.trailer });
   }
 
   onMediaClick(): void {
     if (!this.media?.id) return;
-    
-    const mediaType = this.determineMediaType();
-    this.router.navigate([`/${mediaType}/${this.media.id}`]);
+    this.mediaClick.emit(this.media);
   }
 
   // ✅ Safer media type detection
   private determineMediaType(): string {
     if (!this.media) return 'movie';
-    
+
     if (this.media.media_type) {
       return this.media.media_type;
     }
-    
+
     // Check for TV-specific properties
     if (this.media.first_air_date || this.media.name) {
       return 'tv';
     }
-    
+
     return 'movie';
   }
 

@@ -15,6 +15,7 @@ import { TmdbService } from '../../services/tmdb.service';
 import { MediaRowComponent } from '../../components/media-row/media-row.component';
 import { TrailerRowComponent } from '../../components/trailer-row/trailer-row.component';
 import { Media, Trailer } from '../../shared/interfaces/media.interface';
+import { Router } from '@angular/router';
 
 // ✅ Better type definitions
 interface TrailerData {
@@ -85,7 +86,8 @@ export class HomeComponent implements OnInit, OnDestroy {
   constructor(
     private tmdb: TmdbService,
     private sanitizer: DomSanitizer,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -128,37 +130,6 @@ export class HomeComponent implements OnInit, OnDestroy {
       });
   }
 
-  // ✅ Safer trending fetch
-  // fetchTrending(): void {
-  //   const serviceCall =
-  //     this.trendingType === 'movie'
-  //       ? this.tmdb.getTrendingMovies()
-  //       : this.tmdb.getTrendingTvShows();
-
-  //   const start = Date.now();
-
-  //   serviceCall
-  //     .pipe(
-  //       takeUntil(this.destroy$),
-  //       catchError((error) => {
-  //         console.error('Failed to fetch trending:', error);
-  //         return of({ results: [] });
-  //       }),
-  //       finalize(() => {
-  //         const elapsed = Date.now() - start;
-  //         const delay = Math.max(0, 200 - elapsed);
-  //         setTimeout(() => {
-  //           this.isLoadingTrending = false;
-  //           this.cdr.markForCheck();
-  //         }, delay);
-  //       })
-  //     )
-  //     .subscribe((data) => {
-  //       this.trendingItems = Array.isArray(data.results) ? data.results : [];
-  //     });
-  // }
-
-  // ✅ Much safer trailer fetching
   fetchLatestTrailers(): void {
     this.tmdb
       .getLatestTrailers(this.trailersCategory)
@@ -366,6 +337,18 @@ export class HomeComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Failed to create trailer URL:', error);
     }
+  }
+
+  onMediaClick(media: Media): void {
+    const mediaType = this.determineMediaType(media);
+    this.router.navigate([`/${mediaType}/${media.id}`]);
+  }
+
+  determineMediaType(media: Media): string {
+    if (!media) return 'movie';
+    if (media.media_type) return media.media_type;
+    if (media.first_air_date || media.name) return 'tv';
+    return 'movie';
   }
 
   closeTrailerModal(): void {

@@ -1,6 +1,6 @@
-# MovieMatch
+# CineScope
 
-MovieMatch is a modern Angular web app for discovering trending, popular, and free-to-watch movies and TV shows using the TMDB API. It features responsive design, animated skeleton loading cards, category filtering, and seamless mobile navigation for an engaging user experience.
+CineScope is a modern Angular web app for discovering trending, popular, and free-to-watch movies and TV shows using the TMDB API. It features responsive design, animated skeleton loading cards, category filtering, and seamless mobile navigation for an engaging user experience.
 
 ## Features
 
@@ -34,8 +34,8 @@ MovieMatch is a modern Angular web app for discovering trending, popular, and fr
 1. **Clone the repository:**
 
    ```bash
-   git clone https://github.com/yourusername/movie-match.git
-   cd movie-match
+   git clone https://github.com/jaydenfarmer/cine-scope.git
+   cd cine-scope
    ```
 
 2. **Install dependencies:**
@@ -96,4 +96,4 @@ Pull requests are welcome! For major changes, please open an issue first to disc
 
 ---
 
-**MovieMatch** – Discover your next favorite movie or show!
+**CineScope** – Discover your next favorite movie or show!
